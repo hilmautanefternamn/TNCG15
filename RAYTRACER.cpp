@@ -1,3 +1,4 @@
+#include "../raytracer/SDL2/include/SDL.h"
 #include "../SDL2/include/SDL.h"
 #include <iostream>
 #include <math.h>
@@ -10,7 +11,7 @@ using namespace std;
 class Vertex
 {
 public:
-    Vertex() {};  // Default constructor
+	Vertex() { x = y = z = 0; w = 1; };  // Default constructor
 
     Vertex(double inX, double inY, double inZ, double inW)
         : x(inX), y(inY), z(inZ), w(inW) {};
@@ -32,7 +33,7 @@ private:
 class Direction
 {
 public:
-    Direction() {};  // Default constructor
+	Direction() { x = y = z = 0; };  // Default constructor
 
     Direction(double inX, double inY, double inZ)
         : x(inX), y(inY), z(inZ) {};
@@ -69,7 +70,7 @@ private:
 };
 
 
-/*Ray has two instances of Vertex, which are the ray’s starting point and end
+/*Ray has two instances of Vertex, which are the rayï¿½s starting point and end
 point. You can put the vertices into a vertex list and use references to
 these points in Ray. Ray contains a reference to the triangle on which
 the end point is located. The ray color is a ColorDbl.*/
@@ -90,9 +91,9 @@ private:
 
 /*The triangle is defined by three objects of the class Vertex.
 The Triangle has a color, which we represent by an instance of ColorDbl.
-The triangle’s normal direction is stored in an instance of Direction.
+The triangleï¿½s normal direction is stored in an instance of Direction.
 It has a method rayIntersection(Ray arg) that computes the intersection
-between a Ray and the Triangle with the Möller-Trumbore algorithm.
+between a Ray and the Triangle with the Mï¿½ller-Trumbore algorithm.
 */
 class Triangle
 {
@@ -102,7 +103,7 @@ public:
     Triangle(Vertex inv0, Vertex inv1, Vertex inv2, Direction n, ColorDbl c)
         :v0(inv0), v1(inv1), v2(inv2), normal(n), color(c) {};
 
-    //computes the intersection between a Ray and the Triangle with the Möller - Trumbore algorithm
+    //computes the intersection between a Ray and the Triangle with the Mï¿½ller - Trumbore algorithm
     bool rayIntersection(const Ray &ray) const
     {
         // t ?
@@ -165,7 +166,7 @@ private:
 
 /* Camera contains two instances of Vertex (the eye points) and a variable that
 allows you to switch between both eye points.
-It contains a 2D array of size 800 × 800. Each element is a Pixel.
+It contains a 2D array of size 800 ï¿½ 800. Each element is a Pixel.
 Its method render() launches a ray through each pixel one at a time.
 The ray is followed through the scene and the radiance we give to the
 pixel is computed according to what we learnt in lectures 4 and 5.

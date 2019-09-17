@@ -1,6 +1,8 @@
 #include "bitmap_image.hpp"
+#include "../SDL2/include/SDL.h"
 #include <iostream>
 #include <math.h>
+#include <stdio.h>
 
 
 using namespace std;
@@ -50,8 +52,16 @@ public:
 
     ColorDbl(double R, double G, double B)
         : red(R), green(G), blue(B) {};
+
 private:
     double red, green, blue;
+
+    friend std::ostream& operator<< (std::ostream &os, const ColorDbl &c)
+    {
+        os << c.red << ", " << c.green << ", " << c.blue << endl;
+       
+        return os;
+    }
 };
 
 
@@ -59,7 +69,19 @@ private:
 point. You can put the vertices into a vertex list and use references to
 these points in Ray. Ray contains a reference to the triangle on which
 the end point is located. The ray color is a ColorDbl.*/
-class Ray {};
+class Ray 
+{
+public:
+    Ray() {};
+
+    Ray(Vertex s, Vertex e, ColorDbl c) 
+    : start(s), end(e), color(c){};
+
+private:
+    Vertex start{}, end{};
+   // Triangle &triEnd; 
+    ColorDbl color;
+};
 
 /*The triangle is defined by three objects of the class Vertex.
 The Triangle has a color, which we represent by an instance of ColorDbl.
@@ -95,15 +117,75 @@ intersection point to the Ray arg*/
 class Scene
 {
 public:
+    Scene() {};
     void findIntersecRay(Ray arg) {};
 private:
     Triangle triangles[24]{};
 };
 
+/*Pixel contains one instance of ColorDbl that holds the color and intensity
+for this pixel with a high dynamic range.
+Pixel has references to the rays that go through it. We use for now one 
+The scene image is stored in the ColorDbl attribute of the Pixels.*/
+class Pixel
+{
+public:
+    Pixel() 
+    : color(ColorDbl(1.0, 1.0, 1.0)) {};
+
+    Pixel(ColorDbl c) 
+    : color(c) {};
+
+    ColorDbl getColor()
+    {
+        return color;
+    }
+
+private:
+    ColorDbl color;
+  //  Ray& rays;
+};
+
+/* Camera contains two instances of Vertex (the eye points) and a variable that
+allows you to switch between both eye points.
+It contains a 2D array of size 800 × 800. Each element is a Pixel.
+Its method render() launches a ray through each pixel one at a time.
+The ray is followed through the scene and the radiance we give to the
+pixel is computed according to what we learnt in lectures 4 and 5.
+Initially and to test your code you follow the ray until it hits the first
+triangle and assign the triangle color to the ray. */
+class Camera
+{
+public:
+    Camera(int eye) 
+    : eye(eye){};
+
+    // convert all Pixel::color (vec3) into a 2D array (:
+    void createImage()
+    {
+
+        cout << plane[0][0].getColor();
+       /*
+        for (int i = 0; i < 800; i++)
+            for (int j = 0; j < 800; j++)
+                cout << plane[i][j].getColor();*/
+    }   
+
+    void render()
+    {
+        Ray hej{ eye1, eye2, ColorDbl() };
+    }
+
+private:
+    int eye; // 1 or 2
+    Vertex eye1{ -2.0, 0.0, 0.0, 1.0 };
+    Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };
+    Pixel plane[800][800];
+};
 
 
 // MAIN BITCH   
-int main()
+int main(int argc, char* argv[])
 {
     double w = 1.0;
     std::cout << "Hello World!\n";
@@ -176,7 +258,7 @@ int main()
     triangles[22] = Triangle(vertices[0], vertices[13], vertices[6], normals[7], temp);
     triangles[23] = Triangle(vertices[0], vertices[7], vertices[13], normals[7], temp);
 
-
+/*
     bitmap_image image(200, 200);
 
     // set background to orange
@@ -193,5 +275,23 @@ int main()
     draw.rectangle(50, 50, 150, 150);
 
     image.save_image("output.bmp");
+*/
+    
+    //Camera c{1};
 
+    //c.createImage();
+
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_Window* window = SDL_CreateWindow
+    ("An SDL2 window",  // window's title
+        10, 25,         // coordinates on the screen, in pixels, of the window's upper left corner
+        640, 480,       // window's length and height in pixels  
+        SDL_WINDOW_OPENGL);
+
+    SDL_Delay(3000); // window lasts 3 seconds
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
 }

@@ -12,7 +12,7 @@ class Pixel
 {
 public:
     Pixel()
-        : color(ColorDbl(255.0, 0.0, 0.0)) {};
+        : color(ColorDbl(0.0, 0.0, 0.0)) {};
 
     Pixel(ColorDbl c)
         : color(c) {};

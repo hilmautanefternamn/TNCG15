@@ -1,5 +1,5 @@
-//#include "../raytracer/SDL2/include/SDL.h"
-#include "../SDL2/include/SDL.h"
+#include "../raytracer/SDL2/include/SDL.h"
+//#include "../SDL2/include/SDL.h"
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
@@ -93,13 +93,14 @@ int main(int argc, char* argv[])
     Camera c;
 
     //c.createImage();
+	c.render();
 
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window* window = SDL_CreateWindow
     ("An SDL2 window",  // window's title
         10, 25,         // coordinates on the screen, in pixels, of the window's upper left corner
-        640, 480,       // window's length and height in pixels  
+        800, 800,       // window's length and height in pixels  
         SDL_WINDOW_OPENGL);
 
     SDL_Delay(3000); // window lasts 3 seconds

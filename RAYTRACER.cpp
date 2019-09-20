@@ -3,7 +3,8 @@
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
-
+#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -16,7 +17,11 @@ public:
     Vertex(double inX, double inY, double inZ, double inW)
         : x(inX), y(inY), z(inZ), w(inW) {};
 
-    Vertex operator-(const Vertex &v) const { return Vertex(x - v.x, y - v.y, z - v.z, 1); }
+	Vertex operator-(const Vertex &v) const { return Vertex(x - v.x, y - v.y, z - v.z, 1); };
+	//Vertex operator*(const Vertex &v) const { return Vertex(x * v.x, y * v.y, z * v.z, 1); }
+	//Vertex operator/(const Vertex &v) const { return Vertex(x / v.x, y / v.y, z / v.z, 1); }
+	double dotProduct(const Vertex &v) const { return ((x * v.x + y * v.y + z * v.z)); };
+
 
     Vertex crossProduct(const Vertex &v) const { return Vertex(y*v.z - z*v.y, z*v.x - x*v.z, x*v.y - y*v.x, 1); };
 
@@ -25,8 +30,9 @@ public:
         std::cout << x << " " << y << " " << z << " " << w << std::endl;
     };
 
+	double x, y, z, w;
 private:
-    double x, y, z, w;
+    
 };
 
 /* Direction  has the three components of a direction vector x, y, z */
@@ -79,14 +85,16 @@ class Ray
 public:
     Ray() {};
 
-    Ray(const Vertex &s, const Vertex &e, ColorDbl &c) 
-    : start(s), end(e), color(c){};
+	Ray(const Vertex &s, const Vertex &e)
+		: start(s), end(e) {};
 
-    Vertex start{}, end{};
 
+	Vertex start, end;
+	ColorDbl color;
+	list<Vertex> vertexList;
 private:
    // Triangle &triEnd; 
-    ColorDbl color;
+    
 };
 
 /*The triangle is defined by three objects of the class Vertex.
@@ -103,8 +111,8 @@ public:
     Triangle(Vertex inv0, Vertex inv1, Vertex inv2, Direction n, ColorDbl c)
         :v0(inv0), v1(inv1), v2(inv2), normal(n), color(c) {};
 
-    //computes the intersection between a Ray and the Triangle with the Möller - Trumbore algorithm
-    bool rayIntersection(const Ray &ray) const
+    //computes the intersection between a Ray and the Triangle with the M�ller - Trumbore algorithm
+    void rayIntersection(const Ray &ray, double &t) const
     {
         // t ?
         Vertex T = ray.start - v0;
@@ -114,7 +122,7 @@ public:
         Vertex P = D.crossProduct(E2);
         Vertex Q = T.crossProduct(E1);
 
-        return false;
+		t = Q.dotProduct(E2) / P.dotProduct(E1);
     };
 
 private:
@@ -148,8 +156,8 @@ The scene image is stored in the ColorDbl attribute of the Pixels.*/
 class Pixel
 {
 public:
-    Pixel() {};
-    //: color(ColorDbl(1.0, 1.0, 1.0)) {};
+    Pixel()
+    : color(ColorDbl(255.0, 0.0, 0.0)) {};
 
     Pixel(ColorDbl c) 
     : color(c) {};
@@ -178,27 +186,31 @@ public:
     Camera() 
     : eye(1){};
 
-    void setEye(int e) { eye = e; }
+	void setEye()
+	{};
 
     void render()
     {
-        //Ray hej{ eye1, eye2, ColorDbl() };
 
         for (int x = 0; x < 800; x++)
         {
             for (int y = 0; y < 800; y++)
             {
+				Ray ray(eye1, Vertex(x, y, 0, 1));
+				
+				
 
             }
         }
     }
    
-
+	int eye; // 1 or 2
+	Vertex eye1{ -2.0, 0.0, 0.0, 1.0 };
+	Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };
+	vector<vector<Pixel>> Plane[800][800];
 private:
-    int eye; // 1 or 2
-    Vertex eye1{ -2.0, 0.0, 0.0, 1.0 };
-    Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };
-   // Pixel *imagePlane[400][400];
+    
+   
     
 };
 
@@ -280,7 +292,7 @@ int main(int argc, char* argv[])
         triangles[23] = Triangle(vertices[0], vertices[7], vertices[13], normals[7], temp);
     }
 
-    Camera c{};
+    Camera c;
 
     //c.createImage();
 

@@ -5,6 +5,7 @@
 #include "Ray.cpp"
 #include "Matrix.cpp"
 #include "Pixel.cpp"
+#include "Scene.cpp"
 #include <vector>
 #include <fstream>
 /* Camera contains two instances of Vertex (the eye points) and a variable that
@@ -19,27 +20,60 @@ class Camera
 {
 public:
     Camera()
-        : eye1{ -2.0, 0.0, 0.0, 1.0 }, pixelPlane(800, std::vector<Pixel>(800)){};
+        : pixelPlane(800, std::vector<Pixel>(800))
+	{};
 
     void setEye()
     {};
 
-    void render()
-    {
-		std::ofstream out("out.ppm");
-		out << "P3\n" << 800 << ' ' << 800 << ' ' << "255\n";
+	void createImage()
+	{
 
-        for (int x = 0; x < 800; x++)
+	};
+
+    void render(Scene &s)
+    {
+		int size = 800;
+		double lengthP = 0.0025;
+		double hlengthP = lengthP / 2.0;
+
+		std::ofstream out("out.ppm");
+		out << "P3\n" << size << ' ' << size << ' ' << "255\n";
+
+		Vertex pixelPoint;
+
+        for (int h = 0; h < size; h++)
         {
-            for (int y = 0; y < 800; y++)
+            for (int w = 0; w < size; w++)
             {
-				//std::cout << pixelPlane[x][y].getColor() << std::endl;
-				pixelPlane[x][y] = ColorDbl(0.0, 120.0, 0.0);
-                Ray ray(eye1, Vertex(x, y, 0, 1));
-				//std::cout << pixelPlane[x][y].getColor() << std::endl;
-				out << pixelPlane[x][y].getColor();
+				double t;
+
+
+				//pixelPoint = Vertex(0, -1+hlengthP+(w*lengthP), 1-hlengthP-(h*lengthP), 1);
+				pixelPoint = Vertex(0.0, w*lengthP -(1-lengthP), h*lengthP - (1 - lengthP), 1.0);
+                Ray ray(eye1, pixelPoint);
+				for(auto &t2 : s.triangles)
+				{
+					
+					/*t2.printTriangle();
+					std::cout << "---------------------" << std::endl;*/
+
+					if (t2.rayIntersection(ray, t)) {
+						pixelPlane[h][w].color = t2.color;
+					}
+				}
+				
+
             }
         }
+
+		for (int h = 0; h < size; h++)
+		{
+			for (int w = 0; w < size; w++) {
+
+				out << pixelPlane[h][w].color;
+			}
+		}
 	};
 
     int eye; // 1 or 2

@@ -21,9 +21,9 @@ public:
     {
         return color;
     }
-
+	ColorDbl color;
 private:
-    ColorDbl color;
+    
     //  Ray& rays;
 };
 

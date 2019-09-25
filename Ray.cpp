@@ -4,7 +4,6 @@
 
 #include "Vertex.cpp"
 #include "ColorDbl.cpp"
-
 /*Ray has two instances of Vertex, which are the ray�s starting point and end
 point. You can put the vertices into a vertex list and use references to
 these points in Ray. Ray contains a reference to the triangle on which
@@ -15,13 +14,14 @@ public:
     Ray() {};
 
     Ray(const Vertex &s, const Vertex &e)
-        : start(s), end(e) {};
+        : start(s), end(e), dir(s-e){};
 
 
     Vertex start, end;
     ColorDbl color;
+	Direction dir;
 private:
-    //Triangle triEnd;
+    //Triangle &triangles;
 
 };
 

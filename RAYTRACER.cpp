@@ -1,4 +1,4 @@
-#include "../raytracer/SDL2/include/SDL.h"
+//#include "../raytracer/SDL2/include/SDL.h"
 //#include "../SDL2/include/SDL.h"
 #include <iostream>
 #include <math.h>
@@ -14,10 +14,10 @@
 using namespace std;
 
 // MAIN BITCH   
-int main(int argc, char* argv[])
+int main()
 {
     // Triangle soup
-    {
+  /*  {
         double w = 1.0;
         std::cout << "Hello World!\n";
 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 
         /*for(int i = 0; i < 14; ++i )
             vertices[i].printVertex();*/
-
+	/*
         Direction normals[8];
         normals[0] = Direction(0.0, 0.0, 1.0);                  // floor
         normals[1] = Direction(0.0, 0.0, -1.0);                 // roof
@@ -53,23 +53,23 @@ int main(int argc, char* argv[])
 
         /*for (int i = 0; i < 8; ++i)
             normals[i].printDirection(); */
-        ColorDbl temp;
-
+        /*ColorDbl temp;
+		ColorDbl white = ColorDbl(255.0,255.0,255.0);
         Triangle triangles[24];
         // floor
-        triangles[0] = Triangle(vertices[1], vertices[2], vertices[0], normals[0], temp);
-        triangles[1] = Triangle(vertices[1], vertices[3], vertices[2], normals[0], temp);
-        triangles[2] = Triangle(vertices[1], vertices[4], vertices[3], normals[0], temp);
-        triangles[3] = Triangle(vertices[1], vertices[5], vertices[4], normals[0], temp);
-        triangles[4] = Triangle(vertices[1], vertices[6], vertices[5], normals[0], temp);
-        triangles[5] = Triangle(vertices[1], vertices[0], vertices[6], normals[0], temp);
+        triangles[0] = Triangle(vertices[1], vertices[2], vertices[0], normals[0], white);
+        triangles[1] = Triangle(vertices[1], vertices[3], vertices[2], normals[0], white);
+        triangles[2] = Triangle(vertices[1], vertices[4], vertices[3], normals[0], white);
+        triangles[3] = Triangle(vertices[1], vertices[5], vertices[4], normals[0], white);
+        triangles[4] = Triangle(vertices[1], vertices[6], vertices[5], normals[0], white);
+        triangles[5] = Triangle(vertices[1], vertices[0], vertices[6], normals[0], white);
         // roof
-        triangles[6] = Triangle(vertices[8], vertices[9], vertices[7], normals[1], temp);
-        triangles[7] = Triangle(vertices[8], vertices[10], vertices[9], normals[1], temp);
-        triangles[8] = Triangle(vertices[8], vertices[11], vertices[10], normals[1], temp);
-        triangles[9] = Triangle(vertices[8], vertices[12], vertices[11], normals[1], temp);
-        triangles[10] = Triangle(vertices[8], vertices[13], vertices[12], normals[1], temp);
-        triangles[11] = Triangle(vertices[8], vertices[7], vertices[13], normals[1], temp);
+        triangles[6] = Triangle(vertices[8], vertices[9], vertices[7], normals[1], white);
+        triangles[7] = Triangle(vertices[8], vertices[10], vertices[9], normals[1], white);
+        triangles[8] = Triangle(vertices[8], vertices[11], vertices[10], normals[1], white);
+        triangles[9] = Triangle(vertices[8], vertices[12], vertices[11], normals[1], white);
+        triangles[10] = Triangle(vertices[8], vertices[13], vertices[12], normals[1], white);
+        triangles[11] = Triangle(vertices[8], vertices[7], vertices[13], normals[1], white);
         // VB
         triangles[12] = Triangle(vertices[2], vertices[7], vertices[0], normals[2], temp);
         triangles[13] = Triangle(vertices[2], vertices[9], vertices[7], normals[2], temp);
@@ -88,24 +88,36 @@ int main(int argc, char* argv[])
         // VF
         triangles[22] = Triangle(vertices[0], vertices[13], vertices[6], normals[7], temp);
         triangles[23] = Triangle(vertices[0], vertices[7], vertices[13], normals[7], temp);
-    }
+    }*/
 
     Camera c;
+	Scene s;
 
     //c.createImage();
-	c.render();
+	s.createScene();
+	c.render(s);
 
-    SDL_Init(SDL_INIT_VIDEO);
+   
 
-    SDL_Window* window = SDL_CreateWindow
+    /*SDL_Window* window = SDL_CreateWindow
     ("An SDL2 window",  // window's title
         10, 25,         // coordinates on the screen, in pixels, of the window's upper left corner
         800, 800,       // window's length and height in pixels  
         SDL_WINDOW_OPENGL);
+	
 
-    SDL_Delay(3000); // window lasts 3 seconds
+    SDL_Delay(3000); // window lasts 3 seconds*/
+	/*SDL_Init(SDL_INIT_VIDEO);
+	SDL_Window *window;
+	SDL_Renderer *renderer;
+	SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+
+	//Probably on a loop
+	SDL_RenderDrawPoint(renderer, 400, 300); //Renders on middle of screen.
+	SDL_RenderPresent(renderer);
+
     SDL_DestroyWindow(window);
-    SDL_Quit();
+    SDL_Quit();*/
 
     return 0;
 }

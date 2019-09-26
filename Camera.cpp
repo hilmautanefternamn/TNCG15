@@ -31,6 +31,8 @@ public:
 		double lengthP = 0.0025;
 		double hlengthP = lengthP / 2.0;
 
+		Vertex pointLight = Vertex(5.0, 0.0, 5.0, 1.0);
+
 		std::ofstream out("out.ppm");
 		out << "P3\n" << size << ' ' << size << ' ' << "255\n";
 

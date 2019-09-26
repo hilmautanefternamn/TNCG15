@@ -31,9 +31,20 @@ public:
         Direction P = D.crossProduct(E2);
         Direction Q = T.crossProduct(E1);
 
+		double a = E1.dotProduct(P);
+
+		if (a > -EPS && a < EPS) {
+			return false;
+		}
+		double u, v;
+
+		u = P.dotProduct(T) / a; if (u < 0.0 || u > 1.0) return false;
+		v = Q.dotProduct(D) / a; if (v < 0.0 || u+v > 1.0) return false;
+
         t = Q.dotProduct(E2) / P.dotProduct(E1);
 
 		if (t > EPS) {
+			// P = O +t*D
 			return true;
 		}
 

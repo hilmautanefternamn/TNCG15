@@ -62,18 +62,12 @@ public:
 						pixelPlane[h][w].color = t2.color;
 					}
 				}
-				
+				out << pixelPlane[h][w].color;
+
 
             }
         }
 
-		for (int h = 0; h < size; h++)
-		{
-			for (int w = 0; w < size; w++) {
-
-				out << pixelPlane[h][w].color;
-			}
-		}
 	};
 
     int eye; // 1 or 2

@@ -1,7 +1,6 @@
 #ifndef VERTEX_CPP
 #define VERTEX_CPP
 
-
 #include "Direction.cpp"
 
 // Vertex has three spatial coordinates x, y, z and w (for homogeneous coordinates)

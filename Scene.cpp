@@ -15,6 +15,7 @@ class Scene
 {
 public:
     Scene() {};
+
     void findIntersecRay(Ray arg) {};
 
 	void createScene()

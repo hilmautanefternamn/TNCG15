@@ -42,9 +42,10 @@ public:
 
         t = Q.dotProduct(E2) / P.dotProduct(E1);
 
-		if (t > EPS) 
+		if (t > EPS) {
+			Vertex Phit = ray.start + Vertex(t*D.x,t*D.y,t*D.z, 1.0);
 			return true;
-
+		}
 		return false;
     };
 
@@ -54,7 +55,16 @@ public:
 		std::cout << v1.x << " " << v1.y << " " << v1.z << std::endl;
 		std::cout << v2.x << " " << v2.y << " " << v2.z << std::endl;
 	};
+	
+	Direction getNormal()
+	{
+		Direction v0d = v1 - v0;
+		Direction v1d = v2 - v0;
 
+		return(Direction(v0d.crossProduct(v1d).normalize()));
+	}
+
+	Vertex Phit;
 	Vertex v0, v1, v2;
 	Direction normal;
 	ColorDbl color;

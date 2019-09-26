@@ -7,6 +7,7 @@
 #include "Scene.cpp"
 #include <vector>
 #include <fstream>
+#include <cmath>
 /* Camera contains two instances of Vertex (the eye points) and a variable that
 allows you to switch between both eye points.
 It contains a 2D array of size 800 � 800. Each element is a Pixel.
@@ -15,6 +16,7 @@ The ray is followed through the scene and the radiance we give to the
 pixel is computed according to what we learnt in lectures 4 and 5.
 Initially and to test your code you follow the ray until it hits the first
 triangle and assign the triangle color to the ray. */
+const double PI = 3.14159265359;
 class Camera
 {
 public:
@@ -30,8 +32,10 @@ public:
 		int size = 800;
 		double lengthP = 0.0025;
 		double hlengthP = lengthP / 2.0;
+		ColorDbl black = ColorDbl(255.0, 255.0, 255.0);
 
 		Vertex pointLight = Vertex(5.0, 0.0, 5.0, 1.0);
+		Direction pointLightDirection;
 
 		std::ofstream out("out.ppm");
 		out << "P3\n" << size << ' ' << size << ' ' << "255\n";
@@ -49,8 +53,17 @@ public:
 				
 				for(auto &t2 : s.triangles)
 				{
-					if (t2.rayIntersection(ray, t)) 
-				        pixelPlane[w][h].color = t2.color;
+					if (t2.rayIntersection(ray, t))
+					{
+						pointLightDirection = pointLight - t2.Phit;
+						//t2.getNormal();
+						double angle = acos(pointLightDirection.normalize().dotProduct(t2.getNormal()));
+						if (angle > PI / 2)
+						{
+							pixelPlane[w][h].color = black;
+						}
+						pixelPlane[w][h].color = (t2.color*std::abs(cos(angle)));
+					}
 				}
 				out << pixelPlane[w][h].color;
             }

@@ -15,8 +15,11 @@ public:
     ColorDbl(double R, double G, double B)
         : red(R), green(G), blue(B) {};
 
+	ColorDbl operator*(const double &d) { return ColorDbl(red*d, green*d, blue*d); };
+
+	double red, green, blue;
 private:
-    double red, green, blue;
+   
 
     friend std::ostream& operator<< (std::ostream &os, const ColorDbl &c)
     {

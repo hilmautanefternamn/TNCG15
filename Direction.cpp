@@ -14,7 +14,7 @@ public:
     Direction(double inX, double inY, double inZ)
         : x(inX), y(inY), z(inZ) {};
 
-    //Direction operator*(const Direction &v) const { return Direction(x * v.x, y * v.y, z * v.z); }
+    //Direction operator*(const Direction &v) const { return Direction(this * v.x, this * v.y, this * v.z); }
     //Vertex operator/(const Vertex &v) const { return Vertex(x / v.x, y / v.y, z / v.z, 1); }
 
     double dotProduct(const Direction &v) const { return ((x * v.x + y * v.y + z * v.z)); };
@@ -28,8 +28,9 @@ public:
         std::cout << x << " " << y << " " << z << std::endl;
     };
 
+	double x, y, z;
 private:
-    double x, y, z;
+ 
 };
 
 #endif // !DIRECTION_CPP

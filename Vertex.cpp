@@ -13,6 +13,7 @@ public:
         : x(inX), y(inY), z(inZ), w(inW) {};
 
     Direction operator-(const Vertex &v) const { return Direction(x - v.x, y - v.y, z - v.z); };
+	Vertex operator+(const Vertex &v) const { return Vertex(x + v.x, y + v.y, z + v.z, 1.0); };
 
     void printVertex()
     {

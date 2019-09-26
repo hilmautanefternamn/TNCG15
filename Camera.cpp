@@ -44,13 +44,13 @@ public:
 
         for (int h = 0; h < size; h++)
         {
-            for (int w = 0; w < size; w++)
+            for (int w = size-1; w >= 0; w--)
             {
 				double t;
 
 
-				//pixelPoint = Vertex(0, -1+hlengthP+(w*lengthP), 1-hlengthP-(h*lengthP), 1);
-				pixelPoint = Vertex(0.0, w*lengthP -(1-lengthP), h*lengthP - (1 - lengthP), 1.0);
+				pixelPoint = Vertex(0.0, hlengthP+(w*lengthP)-1.0, 1.0-hlengthP-(h*lengthP), 1.0);
+				//pixelPoint = Vertex(0.0, w*lengthP -(1-lengthP), h*lengthP -(1 - lengthP), 1.0);
                 Ray ray(eye1, pixelPoint);
 				
 				for(auto &t2 : s.triangles)
@@ -61,11 +61,11 @@ public:
 
 					if (t2.rayIntersection(ray, t)) {
 				
-						pixelPlane[h][w].color = t2.color;
+						pixelPlane[w][h].color = t2.color;
 					}
 				}
 
-				out << pixelPlane[h][w].color;
+				out << pixelPlane[w][h].color;
 
 
             }

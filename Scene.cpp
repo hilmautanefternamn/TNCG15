@@ -53,6 +53,7 @@ public:
 		ColorDbl orange = ColorDbl(255.0, 165.0, 0.0);
 		ColorDbl cyan = ColorDbl(0.0, 255.0, 255.0);
 		ColorDbl yellow = ColorDbl(255.0, 255.0, 0.0);
+		ColorDbl grey = ColorDbl(100.0, 100.0, 100.0);
 
 		// floor
 		triangles.push_back(Triangle(vertices[1], vertices[2], vertices[0], normals[0], white));
@@ -62,12 +63,12 @@ public:
 		triangles.push_back(Triangle(vertices[1], vertices[6], vertices[5], normals[0], white));
 		triangles.push_back(Triangle(vertices[1], vertices[0], vertices[6], normals[0], white));
 		// roof
-		triangles.push_back(Triangle(vertices[8], vertices[9], vertices[7], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[10], vertices[9], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[11], vertices[10], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[12], vertices[11], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[13], vertices[12], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[7], vertices[13], normals[1], white));
+		triangles.push_back(Triangle(vertices[8], vertices[9], vertices[7], normals[1], grey));
+		triangles.push_back(Triangle(vertices[8], vertices[10], vertices[9], normals[1], grey));
+		triangles.push_back(Triangle(vertices[8], vertices[11], vertices[10], normals[1], grey));
+		triangles.push_back(Triangle(vertices[8], vertices[12], vertices[11], normals[1], grey));
+		triangles.push_back(Triangle(vertices[8], vertices[13], vertices[12], normals[1], grey));
+		triangles.push_back(Triangle(vertices[8], vertices[7], vertices[13], normals[1], grey));
 		// VB
 		triangles.push_back(Triangle(vertices[2], vertices[7], vertices[0], normals[2], blue));
 		triangles.push_back(Triangle(vertices[2], vertices[9], vertices[7], normals[2], blue));

@@ -52,6 +52,7 @@ public:
 				//pixelPoint = Vertex(0, -1+hlengthP+(w*lengthP), 1-hlengthP-(h*lengthP), 1);
 				pixelPoint = Vertex(0.0, w*lengthP -(1-lengthP), h*lengthP - (1 - lengthP), 1.0);
                 Ray ray(eye1, pixelPoint);
+				
 				for(auto &t2 : s.triangles)
 				{
 					
@@ -59,9 +60,11 @@ public:
 					std::cout << "---------------------" << std::endl;*/
 
 					if (t2.rayIntersection(ray, t)) {
+				
 						pixelPlane[h][w].color = t2.color;
 					}
 				}
+
 				out << pixelPlane[h][w].color;
 
 

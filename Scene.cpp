@@ -87,6 +87,15 @@ public:
 		triangles.push_back(Triangle(vertices[0], vertices[13], vertices[6], normals[7], yellow));
 		triangles.push_back(Triangle(vertices[0], vertices[7], vertices[13], normals[7], yellow));
 
+		//Tetrahedron
+		Direction dummy(0.0, 0.0, 0.0);
+		ColorDbl pink(255.0, 20.0, 147.0);
+
+		triangles.push_back(Triangle(Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink)); //F
+		triangles.push_back(Triangle(Vertex(10.6,3.5,0.0,1.0), Vertex(8.0, 2.0, 0.0, 1.0), Vertex(9.3 ,2.0, 2.6, 1.0), dummy, pink)); //L
+		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), dummy, pink)); //R
+		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink)); //B
+
 		
 	};
 

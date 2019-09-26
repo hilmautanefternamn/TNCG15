@@ -32,7 +32,7 @@ public:
 		int size = 800;
 		double lengthP = 0.0025;
 		double hlengthP = lengthP / 2.0;
-		ColorDbl black = ColorDbl(255.0, 255.0, 255.0);
+		ColorDbl black = ColorDbl(0.0, 0.0, 0.0);
 
 		Vertex pointLight = Vertex(5.0, 0.0, 5.0, 1.0);
 		Direction pointLightDirection;
@@ -47,8 +47,10 @@ public:
             for (int w = size-1; w >= 0; w--)
             {
 				double t;
+				double st  = 10000.0; //shadow t
+				
 
-				pixelPoint = Vertex(0.0, hlengthP+(w*lengthP)-1.0, 1.0-hlengthP-(h*lengthP), 1.0);
+				pixelPoint = Vertex(0.0, hlengthP+(w*lengthP)-1.0, 1.0-hlengthP-(h*lengthP),  1.0);
                 Ray ray(eye1, pixelPoint);
 				
 				for(auto &t2 : s.triangles)
@@ -56,13 +58,27 @@ public:
 					if (t2.rayIntersection(ray, t))
 					{
 						pointLightDirection = pointLight - t2.Phit;
-						//t2.getNormal();
-						double angle = acos(pointLightDirection.normalize().dotProduct(t2.getNormal()));
-						if (angle > PI / 2)
+						double pointLightDirectionLength = sqrt(pow(pointLightDirection.x, 2.0) + pow(pointLightDirection.y, 2.0) + pow(pointLightDirection.z, 2.0));
+
+						/*Ray shadowRay(t2.Phit, pointLight);
+						cout << st << endl;
+						t2.rayIntersection(shadowRay, st);
+						cout << st << endl;
+
+						if (st < pointLightDirectionLength)
 						{
 							pixelPlane[w][h].color = black;
-						}
-						pixelPlane[w][h].color = (t2.color*std::abs(cos(angle)));
+						}*/
+						
+
+							double angle = acos(pointLightDirection.normalize().dotProduct(t2.getNormal()));
+
+							if (angle > (PI / 2))
+							{
+								pixelPlane[w][h].color = black;
+							}
+							pixelPlane[w][h].color = (t2.color*std::abs(cos(angle)));
+						
 					}
 				}
 				out << pixelPlane[w][h].color;

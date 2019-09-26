@@ -1,7 +1,6 @@
 #ifndef COLORDBL_CPP
 #define COLORDBL_CPP
 
-
 #include <iostream>
 using namespace std;
 

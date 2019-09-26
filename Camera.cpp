@@ -25,11 +25,6 @@ public:
     void setEye()
     {};
 
-	void createImage()
-	{
-
-	};
-
     void render(Scene &s)
     {
 		int size = 800;
@@ -47,29 +42,17 @@ public:
             {
 				double t;
 
-
 				pixelPoint = Vertex(0.0, hlengthP+(w*lengthP)-1.0, 1.0-hlengthP-(h*lengthP), 1.0);
-				//pixelPoint = Vertex(0.0, w*lengthP -(1-lengthP), h*lengthP -(1 - lengthP), 1.0);
                 Ray ray(eye1, pixelPoint);
 				
 				for(auto &t2 : s.triangles)
 				{
-					
-					/*t2.printTriangle();
-					std::cout << "---------------------" << std::endl;*/
-
-					if (t2.rayIntersection(ray, t)) {
-				
-						pixelPlane[w][h].color = t2.color;
-					}
+					if (t2.rayIntersection(ray, t)) 
+				        pixelPlane[w][h].color = t2.color;
 				}
-
 				out << pixelPlane[w][h].color;
-
-
             }
         }
-
 	};
 
     int eye; // 1 or 2
@@ -77,11 +60,7 @@ public:
     Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };
 	std::vector<std::vector<Pixel>>pixelPlane;
 
-
-
 private:
-
-
 
 };
 

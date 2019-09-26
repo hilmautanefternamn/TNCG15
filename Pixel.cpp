@@ -1,7 +1,6 @@
 #ifndef PIXEL_CPP
 #define PIXEL_CPP
 
-
 #include "ColorDbl.cpp"
 
 /*Pixel contains one instance of ColorDbl that holds the color and intensity

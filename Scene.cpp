@@ -15,10 +15,8 @@ class Scene
 {
 public:
     Scene() {};
-    void findIntersecRay(Ray arg) {
+    void findIntersecRay(Ray arg) {};
 
-		
-	};
 	void createScene()
 	{
 		vertices[0] = Vertex(-3.0, 0.0, -5.0, w);
@@ -37,13 +35,13 @@ public:
 		vertices[12] = Vertex(10.0, -6.0, 5.0, w);
 		vertices[13] = Vertex(0.0, -6.0, 5.0, w);
 
-		normals[0] = Direction(0.0, 0.0, 1.0);                  // floor
-		normals[1] = Direction(0.0, 0.0, -1.0);                 // roof
+		normals[0] = Direction(0.0, 0.0, 1.0);                      // floor
+		normals[1] = Direction(0.0, 0.0, -1.0);                     // roof
 		normals[2] = Direction(2 / sqrt(5), -1 / sqrt(5), 0.0);     // VB
-		normals[3] = Direction(0.0, -1.0, 0.0);                 // B
+		normals[3] = Direction(0.0, -1.0, 0.0);                     // B
 		normals[4] = Direction(-2 / sqrt(5), -1 / sqrt(5), 0.0);    // HB
 		normals[5] = Direction(-2 / sqrt(5), 1 / sqrt(5), 0.0);     // HF
-		normals[6] = Direction(0.0, 1.0, 0.0);                  // F
+		normals[6] = Direction(0.0, 1.0, 0.0);                      // F
 		normals[7] = Direction(2 / sqrt(5), 1 / sqrt(5), 0.0);      // VF
 
 		ColorDbl white = ColorDbl(255.0, 255.0, 255.0);
@@ -88,28 +86,24 @@ public:
 		triangles.push_back(Triangle(vertices[0], vertices[13], vertices[6], normals[7], yellow));
 		triangles.push_back(Triangle(vertices[0], vertices[7], vertices[13], normals[7], yellow));
 
-		//Tetrahedron
+		// Tetrahedron
 		Direction dummy(0.0, 0.0, 0.0);
 		ColorDbl pink(255.0, 20.0, 147.0);
 
-		triangles.push_back(Triangle(Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink)); //F
-		triangles.push_back(Triangle(Vertex(10.6,3.5,0.0,1.0), Vertex(8.0, 2.0, 0.0, 1.0), Vertex(9.3 ,2.0, 2.6, 1.0), dummy, pink)); //L
-		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), dummy, pink)); //R
-		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink)); //B
-
-		
+		triangles.push_back(Triangle(Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));    // F
+		triangles.push_back(Triangle(Vertex(10.6,3.5,0.0,1.0), Vertex(8.0, 2.0, 0.0, 1.0), Vertex(9.3 ,2.0, 2.6, 1.0), dummy, pink));       // L
+		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), dummy, pink));   // R
+		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));   // B
 	};
 
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];
 	Direction normals[8];
 
-	//std::vector<Vertex> vertices;
-	//std::vector<Direction> normals;
 	double w = 1;
 
 private:
-    //Triangle triangles[24]{};
+
 };
 
 #endif // !SCENE_CPP

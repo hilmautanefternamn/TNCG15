@@ -1,7 +1,6 @@
 ﻿#ifndef RAY_CPP
 #define RAY_CPP
 
-
 #include "Vertex.cpp"
 #include "ColorDbl.cpp"
 /*Ray has two instances of Vertex, which are the ray�s starting point and end
@@ -15,7 +14,6 @@ public:
 
     Ray(const Vertex &s, const Vertex &e)
         : start(s), end(e), dir(s-e){};
-
 
     Vertex start, end;
     ColorDbl color;

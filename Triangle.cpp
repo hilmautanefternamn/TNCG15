@@ -5,14 +5,14 @@
 #include "Ray.cpp"
 #include "ColorDbl.cpp"
 
+const double EPS = 1e-4;
+
 /*The triangle is defined by three objects of the class Vertex.
 The Triangle has a color, which we represent by an instance of ColorDbl.
 The triangle�s normal direction is stored in an instance of Direction.
 It has a method rayIntersection(Ray arg) that computes the intersection
 between a Ray and the Triangle with the Möller-Trumbore algorithm.
 */
-
-const double EPS = 1e-4;
 class Triangle
 {
 public:
@@ -33,23 +33,21 @@ public:
 
 		double a = E1.dotProduct(P);
 
-		if (a > -EPS && a < EPS) {
+		if (a > -EPS && a < EPS) 
 			return false;
-		}
+	
 		double u, v;
-
 		u = P.dotProduct(T) / a; if (u < 0.0 || u > 1.0) return false;
 		v = Q.dotProduct(D) / a; if (v < 0.0 || u+v > 1.0) return false;
 
         t = Q.dotProduct(E2) / P.dotProduct(E1);
 
-		if (t > EPS) {
-			// P = O +t*D
+		if (t > EPS) 
 			return true;
-		}
 
 		return false;
     };
+
 	void printTriangle()
 	{
 		std::cout << v0.x << " " << v0.y << " " << v0.z << std::endl;
@@ -60,6 +58,7 @@ public:
 	Vertex v0, v1, v2;
 	Direction normal;
 	ColorDbl color;
+
 private:
   
 

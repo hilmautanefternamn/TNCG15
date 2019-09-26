@@ -21,6 +21,7 @@ public:
     };
 
     double x, y, z, w;
+
 private:
 
 };

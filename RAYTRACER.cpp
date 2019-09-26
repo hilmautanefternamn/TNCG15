@@ -1,5 +1,3 @@
-//#include "../raytracer/SDL2/include/SDL.h"
-//#include "../SDL2/include/SDL.h"
 #include <iostream>
 #include <math.h>
 #include <stdio.h>

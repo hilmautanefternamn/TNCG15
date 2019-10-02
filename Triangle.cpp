@@ -19,10 +19,13 @@ public:
     Triangle() {};
 
     Triangle(Vertex inv0, Vertex inv1, Vertex inv2, Direction n, ColorDbl c)
-        :v0(inv0), v1(inv1), v2(inv2), normal(n), color(c) {};
+		:v0(inv0), v1(inv1), normal(n), v2(inv2), color(c) {
+		normal = this->getNormal();
+		std::cout << normal.x << "," << normal.y <<"," << normal.z << endl;
+	};
 
     //computes the intersection between a Ray and the Triangle with the M�ller - Trumbore algorithm
-    bool rayIntersection(const Ray &ray, double &t) const
+    bool rayIntersection(const Ray &ray, double &t)
     {
         Direction T = ray.start - v0;
         Direction E1 = v1 - v0;
@@ -43,7 +46,7 @@ public:
         t = Q.dotProduct(E2) / P.dotProduct(E1);
 
 		if (t > EPS) {
-			Vertex Phit = ray.start + Vertex(t*D.x,t*D.y,t*D.z, 1.0);
+			Phit = ray.start + Vertex(t*D.x,t*D.y,t*D.z, 1.0);
 			return true;
 		}
 		return false;
@@ -61,9 +64,9 @@ public:
 		Direction v0d = v1 - v0;
 		Direction v1d = v2 - v0;
 		Direction normal = v0d.crossProduct(v1d);
-		normal = normal.normalize();
+		
 
-		return(Direction(normal));
+		return(normal.normalize());
 	}
 
 	Vertex Phit;

@@ -58,14 +58,26 @@ public:
 					if (t2.rayIntersection(ray, t))
 					{
 						pointLightDirection = pointLight - t2.Phit;
-						pointLightDirection = pointLightDirection.normalize();
 						//t2.getNormal();
-						double angle = acos(pointLightDirection.dotProduct(t2.getNormal()));
-						if (angle > PI/2)
+						Ray shadowRay(t2.Phit, pointLight);
+						if (t2.rayIntersection(shadowRay, st))
 						{
-							pixelPlane[w][h].color = black;
+							if (st < pointLightDirection.length())
+							{
+								pixelPlane[w][h].color = black;
+							}
 						}
-						pixelPlane[w][h].color = (t2.color*std::abs(cos(angle)));
+
+						else {
+
+							pointLightDirection = pointLightDirection.normalize();
+							double angle = acos(pointLightDirection.dotProduct(t2.getNormal()));
+							if (angle > PI / 2)
+							{
+								pixelPlane[w][h].color = black;
+							}
+							pixelPlane[w][h].color = (t2.color*std::abs(cos(angle)));
+						}
 						//pixelPlane[w][h].color = t2.color;
 					}
 				}

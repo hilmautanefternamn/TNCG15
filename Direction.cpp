@@ -23,6 +23,8 @@ public:
 
     Direction normalize() { return Direction(x / sqrt(x*x + y * y + z * z), y / sqrt(x*x + y * y + z * z), z / sqrt(x*x + y * y + z * z)); };
 
+	Direction operator*(const double d) const { return Direction(x*d, y*d, z*d); };
+
 	double length() { return(sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2))); };
 
     void printDirection()

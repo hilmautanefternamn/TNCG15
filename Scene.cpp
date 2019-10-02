@@ -90,11 +90,20 @@ public:
 		// Tetrahedron
 		Direction dummy(0.0, 0.0, 0.0);
 		ColorDbl pink(255.0, 20.0, 147.0);
+		Vertex v0 = Vertex(8.0, 2.0, 1.0, 1.0);
+		Vertex v1 = Vertex(10.6, 0.5, 0.0, 1.0);
+		Vertex v2 = Vertex(10.6, 3.5, 0.0, 1.0);
+		Vertex v3 = Vertex(9.3, 2.0, 2.6, 1.0);
 
-		triangles.push_back(Triangle(Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));    // F
+		/*triangles.push_back(Triangle(Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));    // RS
 		triangles.push_back(Triangle(Vertex(10.6 ,3.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), Vertex(9.3 ,2.0, 2.6, 1.0), dummy, pink));       // L
-		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), dummy, pink));   // R
-		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));   // B
+		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), dummy, green));   // R
+		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));   // B*/
+
+		triangles.push_back(Triangle(v0, v1, v3, dummy, pink));    // RS
+		triangles.push_back(Triangle(v0, v3, v2, dummy, orange));       // Ls
+		triangles.push_back(Triangle(v2, v3, v1, dummy, green));   // back
+		triangles.push_back(Triangle(v0, v2, v1, dummy, cyan));   // bottom
 	};
 
 	std::vector<Triangle> triangles;

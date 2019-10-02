@@ -56,13 +56,15 @@ public:
 					if (t2.rayIntersection(ray, t))
 					{
 						pointLightDirection = pointLight - t2.Phit;
+						pointLightDirection = pointLightDirection.normalize();
 						//t2.getNormal();
-						double angle = acos(pointLightDirection.normalize().dotProduct(t2.getNormal()));
-						if (angle > PI / 2)
+						double angle = acos(pointLightDirection.dotProduct(t2.getNormal()));
+						if (angle > PI/2)
 						{
 							pixelPlane[w][h].color = black;
 						}
 						pixelPlane[w][h].color = (t2.color*std::abs(cos(angle)));
+						//pixelPlane[w][h].color = t2.color;
 					}
 				}
 				out << pixelPlane[w][h].color;
@@ -71,7 +73,7 @@ public:
 	};
 
     int eye; // 1 or 2
-    Vertex eye1{ -2.0, 0.0, 0.0, 1.0 };
+    Vertex eye1{ -1.0, 0.0, 0.0, 1.0 };
     Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };
 	std::vector<std::vector<Pixel>>pixelPlane;
 

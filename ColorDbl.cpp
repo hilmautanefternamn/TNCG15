@@ -15,7 +15,7 @@ public:
     ColorDbl(double R, double G, double B)
         : red(R), green(G), blue(B) {};
 
-	ColorDbl operator*(const double &d) { return ColorDbl(red*d, green*d, blue*d); };
+	ColorDbl operator*(const double d) { return ColorDbl(red*d, green*d, blue*d); };
 
 	double red, green, blue;
 private:

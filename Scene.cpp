@@ -62,12 +62,12 @@ public:
 		triangles.push_back(Triangle(vertices[1], vertices[6], vertices[5], normals[0], white));
 		triangles.push_back(Triangle(vertices[1], vertices[0], vertices[6], normals[0], white));
 		// roof
-		triangles.push_back(Triangle(vertices[8], vertices[9], vertices[7], normals[1], grey));
-		triangles.push_back(Triangle(vertices[8], vertices[10], vertices[9], normals[1], grey));
-		triangles.push_back(Triangle(vertices[8], vertices[11], vertices[10], normals[1], grey));
-		triangles.push_back(Triangle(vertices[8], vertices[12], vertices[11], normals[1], grey));
-		triangles.push_back(Triangle(vertices[8], vertices[13], vertices[12], normals[1], grey));
-		triangles.push_back(Triangle(vertices[8], vertices[7], vertices[13], normals[1], grey));
+		triangles.push_back(Triangle(vertices[8], vertices[9], vertices[7], normals[1], white));
+		triangles.push_back(Triangle(vertices[8], vertices[10], vertices[9], normals[1], white));
+		triangles.push_back(Triangle(vertices[8], vertices[11], vertices[10], normals[1], white));
+		triangles.push_back(Triangle(vertices[8], vertices[12], vertices[11], normals[1], white));
+		triangles.push_back(Triangle(vertices[8], vertices[13], vertices[12], normals[1], white));
+		triangles.push_back(Triangle(vertices[8], vertices[7], vertices[13], normals[1], white));
 		// VB
 		triangles.push_back(Triangle(vertices[2], vertices[7], vertices[0], normals[2], blue));
 		triangles.push_back(Triangle(vertices[2], vertices[9], vertices[7], normals[2], blue));
@@ -76,9 +76,9 @@ public:
 		triangles.push_back(Triangle(vertices[3], vertices[10], vertices[9], normals[3], green));
 		// HB
 		triangles.push_back(Triangle(vertices[4], vertices[10], vertices[3], normals[4], red));
-		triangles.push_back(Triangle(vertices[4], vertices[11], vertices[10], normals[4], red));
+		triangles.push_back(Triangle(vertices[4], vertices[11], vertices[10], normals[4], blue));
 		// HF
-		triangles.push_back(Triangle(vertices[5], vertices[11], vertices[4], normals[5], orange));
+		triangles.push_back(Triangle(vertices[5], vertices[11], vertices[4], normals[5], green));
 		triangles.push_back(Triangle(vertices[5], vertices[12], vertices[11], normals[5], orange));
 		// F
 		triangles.push_back(Triangle(vertices[6], vertices[12], vertices[5], normals[6], cyan));
@@ -92,7 +92,7 @@ public:
 		ColorDbl pink(255.0, 20.0, 147.0);
 
 		triangles.push_back(Triangle(Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));    // F
-		triangles.push_back(Triangle(Vertex(10.6,3.5,0.0,1.0), Vertex(8.0, 2.0, 0.0, 1.0), Vertex(9.3 ,2.0, 2.6, 1.0), dummy, pink));       // L
+		triangles.push_back(Triangle(Vertex(10.6 ,3.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), Vertex(9.3 ,2.0, 2.6, 1.0), dummy, pink));       // L
 		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), dummy, pink));   // R
 		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));   // B
 	};

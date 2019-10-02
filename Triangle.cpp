@@ -60,8 +60,10 @@ public:
 	{
 		Direction v0d = v1 - v0;
 		Direction v1d = v2 - v0;
+		Direction normal = v0d.crossProduct(v1d);
+		normal = normal.normalize();
 
-		return(Direction(v0d.crossProduct(v1d).normalize()));
+		return(Direction(normal));
 	}
 
 	Vertex Phit;

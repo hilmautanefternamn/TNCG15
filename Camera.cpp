@@ -32,7 +32,7 @@ public:
 		int size = 800;
 		double lengthP = 0.0025;
 		double hlengthP = lengthP / 2.0;
-		ColorDbl black = ColorDbl(255.0, 255.0, 255.0);
+		ColorDbl black = ColorDbl(0.0, 0.0, 0.0);
 
 		Vertex pointLight = Vertex(5.0, 0.0, 5.0, 1.0);
 		Direction pointLightDirection;
@@ -47,8 +47,10 @@ public:
             for (int w = size-1; w >= 0; w--)
             {
 				double t;
+				double st  = 10000.0; //shadow t
+				
 
-				pixelPoint = Vertex(0.0, hlengthP+(w*lengthP)-1.0, 1.0-hlengthP-(h*lengthP), 1.0);
+				pixelPoint = Vertex(0.0, hlengthP+(w*lengthP)-1.0, 1.0-hlengthP-(h*lengthP),  1.0);
                 Ray ray(eye1, pixelPoint);
 				
 				for(auto &t2 : s.triangles)

@@ -7,19 +7,20 @@
 for this pixel with a high dynamic range.
 Pixel has references to the rays that go through it. We use for now one
 The scene image is stored in the ColorDbl attribute of the Pixels.*/
+
 class Pixel
 {
 public:
+    // default constructor
     Pixel()
-        : color(ColorDbl(0.0, 0.0, 0.0)) {};
+        : color{ ColorDbl(0.0, 0.0, 0.0) } {};
 
+    // constructor to create pixel given a color
     Pixel(ColorDbl c)
-        : color(c) {};
+        : color{ c } {};
 
-    ColorDbl getColor()
-    {
-        return color;
-    }
+    ColorDbl getColor() { return color; }
+
 	ColorDbl color;
 private:
     

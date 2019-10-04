@@ -7,13 +7,16 @@
 point. You can put the vertices into a vertex list and use references to
 these points in Ray. Ray contains a reference to the triangle on which
 the end point is located. The ray color is a ColorDbl.*/
+
 class Ray
 {
 public:
+    // default constructor
     Ray() {};
 
+    // constructor to create ray from start- and end vertex
     Ray(const Vertex &s, const Vertex &e)
-        : start(s), end(e), dir(s-e){};
+        : start{ s }, end{ e }, dir{ s - e }{};
 
     Vertex start, end;
     ColorDbl color;

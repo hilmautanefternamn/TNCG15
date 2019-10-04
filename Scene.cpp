@@ -11,107 +11,93 @@ It should have a method that determines which triangle is intersected by
 the Ray arg by calling successively the rayIntersection(Ray arg) method
 of each Triangle. It then passes references to the triangle and the
 intersection point to the Ray arg*/
+
 class Scene
 {
 public:
+    // default constructor
     Scene() {};
 
-    void findIntersecRay(Ray arg) {};
+    //void findIntersecRay(Ray arg) {};
 
-	void createScene()
-	{
-		vertices[0] = Vertex(-3.0, 0.0, -5.0, w);
-		vertices[1] = Vertex(5.0, 0.0, -5.0, w);
-		vertices[2] = Vertex(0.0, 6.0, -5.0, w);
-		vertices[3] = Vertex(10.0, 6.0, -5.0, w);
-		vertices[4] = Vertex(13.0, 0.0, -5.0, w);
-		vertices[5] = Vertex(10.0, -6.0, -5.0, w);
-		vertices[6] = Vertex(0.0, -6.0, -5.0, w);
+    void createScene()
+    {
+        vertices[0] = Vertex(-3.0, 0.0, -5.0, w);
+        vertices[1] = Vertex(5.0, 0.0, -5.0, w);
+        vertices[2] = Vertex(0.0, 6.0, -5.0, w);
+        vertices[3] = Vertex(10.0, 6.0, -5.0, w);
+        vertices[4] = Vertex(13.0, 0.0, -5.0, w);
+        vertices[5] = Vertex(10.0, -6.0, -5.0, w);
+        vertices[6] = Vertex(0.0, -6.0, -5.0, w);
 
-		vertices[7] = Vertex(-3.0, 0.0, 5.0, w);
-		vertices[8] = Vertex(5.0, 0.0, 5.0, w);
-		vertices[9] = Vertex(0.0, 6.0, 5.0, w);
-		vertices[10] = Vertex(10.0, 6.0, 5.0, w);
-		vertices[11] = Vertex(13.0, 0.0, 5.0, w);
-		vertices[12] = Vertex(10.0, -6.0, 5.0, w);
-		vertices[13] = Vertex(0.0, -6.0, 5.0, w);
+        vertices[7] = Vertex(-3.0, 0.0, 5.0, w);
+        vertices[8] = Vertex(5.0, 0.0, 5.0, w);
+        vertices[9] = Vertex(0.0, 6.0, 5.0, w);
+        vertices[10] = Vertex(10.0, 6.0, 5.0, w);
+        vertices[11] = Vertex(13.0, 0.0, 5.0, w);
+        vertices[12] = Vertex(10.0, -6.0, 5.0, w);
+        vertices[13] = Vertex(0.0, -6.0, 5.0, w);
 
-		normals[0] = Direction(0.0, 0.0, 1.0);                      // floor
-		normals[1] = Direction(0.0, 0.0, -1.0);                     // roof
-		normals[2] = Direction(2 / sqrt(5), -1 / sqrt(5), 0.0);     // VB
-		normals[3] = Direction(0.0, -1.0, 0.0);                     // B
-		normals[4] = Direction(-2 / sqrt(5), -1 / sqrt(5), 0.0);    // HB
-		normals[5] = Direction(-2 / sqrt(5), 1 / sqrt(5), 0.0);     // HF
-		normals[6] = Direction(0.0, 1.0, 0.0);                      // F
-		normals[7] = Direction(2 / sqrt(5), 1 / sqrt(5), 0.0);      // VF
+        ColorDbl white{ 255.0, 255.0, 255.0 };
+        ColorDbl red{ 255.0, 0.0, 0.0 };
+        ColorDbl blue{ 0.0, 0.0, 255.0 };
+        ColorDbl green{ 0.0, 255.0, 0.0 };
+        ColorDbl orange{ 255.0, 165.0, 0.0 };
+        ColorDbl cyan{ 0.0, 255.0, 255.0 };
+        ColorDbl yellow{ 255.0, 255.0, 0.0 };
+        ColorDbl grey{ 100.0, 100.0, 100.0 };
+        ColorDbl pink{ 255.0, 20.0, 147.0 };
 
-		ColorDbl white = ColorDbl(255.0, 255.0, 255.0);
-		ColorDbl red = ColorDbl(255.0, 0.0, 0.0);
-		ColorDbl blue = ColorDbl(0.0, 0.0, 255.0);
-		ColorDbl green = ColorDbl(0.0, 255.0, 0.0);
-		ColorDbl orange = ColorDbl(255.0, 165.0, 0.0);
-		ColorDbl cyan = ColorDbl(0.0, 255.0, 255.0);
-		ColorDbl yellow = ColorDbl(255.0, 255.0, 0.0);
-		ColorDbl grey = ColorDbl(100.0, 100.0, 100.0);
+        // floor
+        triangles.push_back({ vertices[1], vertices[2], vertices[0], white });
+        triangles.push_back({ vertices[1], vertices[3], vertices[2], white });
+        triangles.push_back({ vertices[1], vertices[4], vertices[3], white });
+        triangles.push_back({ vertices[1], vertices[5], vertices[4], white });
+        triangles.push_back({ vertices[1], vertices[6], vertices[5], white });
+        triangles.push_back({ vertices[1], vertices[0], vertices[6], white });
+        // roof
+        triangles.push_back({ vertices[8], vertices[7], vertices[9], white });
+        triangles.push_back({ vertices[8], vertices[9], vertices[10], white });
+        triangles.push_back({ vertices[8], vertices[10], vertices[11], white });
+        triangles.push_back({ vertices[8], vertices[11], vertices[12], white });
+        triangles.push_back({ vertices[8], vertices[12], vertices[13], white });
+        triangles.push_back({ vertices[8], vertices[13], vertices[7], white });
+        // VB
+        triangles.push_back({ vertices[2], vertices[7], vertices[0], blue });
+        triangles.push_back({ vertices[2], vertices[9], vertices[7], blue });
+        // B
+        triangles.push_back({ vertices[3], vertices[9], vertices[2], green });
+        triangles.push_back({ vertices[3], vertices[10], vertices[9], green });
+        // HB
+        triangles.push_back({ vertices[4], vertices[10], vertices[3], red });
+        triangles.push_back({ vertices[4], vertices[11], vertices[10], blue });
+        // HF
+        triangles.push_back({ vertices[5], vertices[11], vertices[4], green });
+        triangles.push_back({ vertices[5], vertices[12], vertices[11], orange });
+        // F
+        triangles.push_back({ vertices[6], vertices[12], vertices[5], cyan });
+        triangles.push_back({ vertices[6], vertices[13], vertices[12], cyan });
+        // VF
+        triangles.push_back({ vertices[0], vertices[13], vertices[6], yellow });
+        triangles.push_back({ vertices[0], vertices[7], vertices[13], yellow });
 
-		// floor
-		triangles.push_back(Triangle(vertices[1], vertices[2], vertices[0], normals[0], white));
-		triangles.push_back(Triangle(vertices[1], vertices[3], vertices[2], normals[0], white));
-		triangles.push_back(Triangle(vertices[1], vertices[4], vertices[3], normals[0], white));
-		triangles.push_back(Triangle(vertices[1], vertices[5], vertices[4], normals[0], white));
-		triangles.push_back(Triangle(vertices[1], vertices[6], vertices[5], normals[0], white));
-		triangles.push_back(Triangle(vertices[1], vertices[0], vertices[6], normals[0], white));
-		// roof
-		triangles.push_back(Triangle(vertices[8], vertices[9], vertices[7], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[10], vertices[9], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[11], vertices[10], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[12], vertices[11], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[13], vertices[12], normals[1], white));
-		triangles.push_back(Triangle(vertices[8], vertices[7], vertices[13], normals[1], white));
-		// VB
-		triangles.push_back(Triangle(vertices[2], vertices[7], vertices[0], normals[2], blue));
-		triangles.push_back(Triangle(vertices[2], vertices[9], vertices[7], normals[2], blue));
-		// B
-		triangles.push_back(Triangle(vertices[3], vertices[9], vertices[2], normals[3], green));
-		triangles.push_back(Triangle(vertices[3], vertices[10], vertices[9], normals[3], green));
-		// HB
-		triangles.push_back(Triangle(vertices[4], vertices[10], vertices[3], normals[4], red));
-		triangles.push_back(Triangle(vertices[4], vertices[11], vertices[10], normals[4], blue));
-		// HF
-		triangles.push_back(Triangle(vertices[5], vertices[11], vertices[4], normals[5], green));
-		triangles.push_back(Triangle(vertices[5], vertices[12], vertices[11], normals[5], orange));
-		// F
-		triangles.push_back(Triangle(vertices[6], vertices[12], vertices[5], normals[6], cyan));
-		triangles.push_back(Triangle(vertices[6], vertices[13], vertices[12], normals[6], cyan));
-		// VF
-		triangles.push_back(Triangle(vertices[0], vertices[13], vertices[6], normals[7], yellow));
-		triangles.push_back(Triangle(vertices[0], vertices[7], vertices[13], normals[7], yellow));
+        // Tetrahedron
+        Vertex v0{ 8.0, 2.0, 0.0, 1.0 };
+        Vertex v1{ 10.6, 0.5, 0.0, 1.0 };
+        Vertex v2 { 10.6, 3.5, 0.0, 1.0 };
+        Vertex v3 { 9.3, 2.0, 2.6, 1.0 };
 
-		// Tetrahedron
-		Direction dummy(0.0, 0.0, 0.0);
-		ColorDbl pink(255.0, 20.0, 147.0);
-
-		Vertex v0 = Vertex(8.0, 2.0, 0.0, 1.0);
-		Vertex v1 = Vertex(10.6, 0.5, 0.0, 1.0);
-		Vertex v2 = Vertex(10.6, 3.5, 0.0, 1.0);
-		Vertex v3 = Vertex(9.3, 2.0, 2.6, 1.0);
-
-		/*triangles.push_back(Triangle(Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));    // RS
-		triangles.push_back(Triangle(Vertex(10.6 ,3.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), Vertex(9.3 ,2.0, 2.6, 1.0), dummy, pink));       // L
-		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(9.3, 2.0, 2.6, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), dummy, green));   // R
-		triangles.push_back(Triangle(Vertex(10.6, 3.5, 0.0, 1.0), Vertex(10.6, 0.5, 0.0, 1.0), Vertex(8.0, 2.0, 0.0, 1.0), dummy, pink));   // B*/
-
-		triangles.push_back(Triangle(v0, v1, v3, dummy, pink));     // RS
-		triangles.push_back(Triangle(v0, v3, v2, dummy, orange));   // LS
-		triangles.push_back(Triangle(v2, v3, v1, dummy, green));    // back
-		triangles.push_back(Triangle(v0, v2, v1, dummy, cyan));     // bottom
+        triangles.push_back({ v0, v1, v3,  pink });     // RS
+        triangles.push_back({ v0, v3, v2,  orange });   // LS
+        triangles.push_back({v2, v3, v1, green });      // back
+        triangles.push_back({ v0, v2, v1,  cyan });     // bottom
 	};
 
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];
 	Direction normals[8];
 
-	double w = 1;
+    double w{ 1.0 };
 
 private:
 

@@ -11,50 +11,52 @@ const double EPS = 1e-4;
 The Triangle has a color, which we represent by an instance of ColorDbl.
 The triangle�s normal direction is stored in an instance of Direction.
 It has a method rayIntersection(Ray arg) that computes the intersection
-between a Ray and the Triangle with the Möller-Trumbore algorithm.
-*/
+between a Ray and the Triangle with the Möller-Trumbore algorithm.*/
+
 class Triangle
 {
 public:
+    // default constructor
     Triangle() {};
 
-    Triangle(Vertex inv0, Vertex inv1, Vertex inv2, Direction n, ColorDbl c)
-		:v0(inv0), v1(inv1), normal(n), v2(inv2), color(c) {
-		normal = this->getNormal();
-		//std::cout << normal.x << "," << normal.y <<"," << normal.z << endl;
-	};
+    // constructor to create triangle from 3 vertices and a color
+    Triangle(Vertex inv0, Vertex inv1, Vertex inv2, ColorDbl c)
+        :v0{ inv0 }, v1{ inv1 }, v2{ inv2 }, color{ c }
+    {
+        normal = { this->getNormal() };
+        normal.printDirection();
+    };
 
     //computes the intersection between a Ray and the Triangle with the M�ller - Trumbore algorithm
     bool rayIntersection(const Ray &ray, double &t, Vertex &Phit)
     {
-        Direction T = ray.start - v0;
-        Direction E1 = v1 - v0;
-        Direction E2 = v2 - v0;
-        Direction D = ray.end - ray.start;
-        Direction P = D.crossProduct(E2);
-        Direction Q = T.crossProduct(E1);
+        Direction T{ ray.start - v0 };
+        Direction E1{ v1 - v0 };
+        Direction E2{ v2 - v0 };
+        Direction D{ ray.end - ray.start };
+        D.normalize();
+        Direction P{ D.crossProduct(E2) };
+        Direction Q{ T.crossProduct(E1) };
 
-		double a = E1.dotProduct(P);
+        double a{ E1.dotProduct(P) };
 
 		if (a > -EPS && a < EPS) 
 			return false;
 	
-		double u, v;
-		u = P.dotProduct(T) / a; if (u < 0.0 || u > 1.0) return false;
-		v = Q.dotProduct(D) / a; if (v < 0.0 || u+v > 1.0) return false;
+        double u{}, v{};
+        u = { P.dotProduct(T) / a };   if (u < 0.0 || u > 1.0) return false;
+        v= { Q.dotProduct(D) / a };   if (v < 0.0 || u + v > 1.0) return false;
 
-        t = Q.dotProduct(E2) / P.dotProduct(E1);
+        t = { Q.dotProduct(E2) / a };
 
-		if (t > EPS) {
-			Phit = ray.start + Vertex(t*D.x,t*D.y,t*D.z, 1.0);
-			//PhitT = ray.start + Vertex(t*D.x, t*D.y, t*D.z, 1.0);
-
+		if (t > EPS && t < 1000000) 
+        {
+            Phit = { ray.start + Vertex(t*D.x, t*D.y, t*D.z, 1.0) };
 			return true;
 		}
+
 		return false;
     };
-
-
 
 	void printTriangle()
 	{
@@ -65,13 +67,13 @@ public:
 	
 	Direction getNormal()
 	{
-		Direction v0d = v1 - v0;
-		Direction v1d = v2 - v0;
-		Direction normal = v0d.crossProduct(v1d);
-		
-
-		return(normal.normalize());
+        Direction d0{ v1 - v0 };
+        Direction d1{ v2 - v0 };
+        Direction normal{ d0.crossProduct(d1) };
+	
+		return Direction(normal.normalize());
 	}
+
 	Vertex PhitT;
 	Vertex v0, v1, v2;
 	Direction normal;

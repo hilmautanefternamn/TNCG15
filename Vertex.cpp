@@ -7,19 +7,20 @@
 class Vertex
 {
 public:
-    Vertex() { x = y = z = 0; w = 1; };  // Default constructor
+    // Default constructor
+    Vertex() { x = y = z = 0; w = 1; };  
 
+    //  constructor to create vertex from double coordinates
     Vertex(double inX, double inY, double inZ, double inW)
-        : x(inX), y(inY), z(inZ), w(inW) {};
+        : x{ inX }, y{ inY }, z{ inZ }, w{ inW } {};
 
+    // math operations
     Direction operator-(const Vertex &v) const { return Direction(x - v.x, y - v.y, z - v.z); };
 	Vertex operator+(const Vertex &v) const { return Vertex(x + v.x, y + v.y, z + v.z, 1.0); };
 	Vertex operator*(const double d) const { return Vertex(x*d, y*d, z*d, 1); };
 
-    void printVertex()
-    {
-        std::cout << x << " " << y << " " << z << " " << w << std::endl;
-    };
+    // print coordinates of vertex
+    void printVertex() { std::cout << x << " " << y << " " << z << " " << w << std::endl; };
 
     double x, y, z, w;
 

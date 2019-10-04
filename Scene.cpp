@@ -90,7 +90,7 @@ public:
 		// Tetrahedron
 		Direction dummy(0.0, 0.0, 0.0);
 		ColorDbl pink(255.0, 20.0, 147.0);
-		Vertex v0 = Vertex(8.0, 2.0, 1.0, 1.0);
+		Vertex v0 = Vertex(8.0, 2.0, 0.0, 1.0);
 		Vertex v1 = Vertex(10.6, 0.5, 0.0, 1.0);
 		Vertex v2 = Vertex(10.6, 3.5, 0.0, 1.0);
 		Vertex v3 = Vertex(9.3, 2.0, 2.6, 1.0);

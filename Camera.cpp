@@ -17,6 +17,7 @@ pixel is computed according to what we learnt in lectures 4 and 5.
 Initially and to test your code you follow the ray until it hits the first
 triangle and assign the triangle color to the ray. */
 const double PI = 3.14159265359;
+//const double EPS = 1e-4;
 class Camera
 {
 public:
@@ -46,21 +47,75 @@ public:
         {
             for (int w = size-1; w >= 0; w--)
             {
-				double t;
+				double t = 10000.0;
 				double st  = 10000.0; //shadow t
+				double minlength = 10000.0;
+				double minlengthS = 10000.0;
 				
 
 				pixelPoint = Vertex(0.0, hlengthP+(w*lengthP)-1.0, 1.0-hlengthP-(h*lengthP),  1.0);
                 Ray ray(eye1, pixelPoint);
 				
-				for(auto &t2 : s.triangles)
+				for (auto &t2 : s.triangles)
 				{
-					if (t2.rayIntersection(ray, t))
+					if (t2.rayIntersection(ray, t, Phit))
 					{
-						pointLightDirection = pointLight - t2.Phit;
-						//t2.getNormal();
-						Ray shadowRay(t2.Phit, pointLight);
-						if (t2.rayIntersection(shadowRay, st))
+					
+						if (t < minlength)
+						{
+							minlength = t;
+							triangleHit = t2;
+							PhitMin = Phit;
+							
+						}
+					}
+				}
+
+				Ray shadowRay(PhitMin, pointLight);
+				for (auto &t2 : s.triangles)
+				{
+					if (t2.rayIntersection(shadowRay, st, PhitS))
+					{
+
+						if (st < minlengthS)
+						{
+							minlengthS = st;
+
+						}
+					}
+				}
+
+				
+					pointLightDirection = pointLight - PhitMin;
+
+					double angle = acos(pointLightDirection.normalize().dotProduct(triangleHit.getNormal()));
+					
+
+					if (abs(angle) > PI / 2)
+					{
+						//pixelPlane[w][h].color = black;
+					}
+
+					if (abs(minlengthS - pointLightDirection.length()) < EPS)
+					{
+						continue;
+					}
+					else if (minlengthS < pointLightDirection.length())
+					{
+						pixelPlane[w][h].color = triangleHit.color;
+					}
+					//pixelPlane[w][h].color = (triangleHit.color*std::abs(cos(angle)));
+					pixelPlane[w][h].color = triangleHit.color;
+				
+				/*for (auto &t2 : s.triangles)
+				{
+					if (t2.rayIntersection(ray, t, Phit))
+					{
+
+						pointLightDirection = pointLight - t2.PhitT;
+					
+						Ray shadowRay(t2.PhitT, pointLight);
+						if (t2.rayIntersection(shadowRay, st, PhitS))
 						{
 							if (st < pointLightDirection.length())
 							{
@@ -73,20 +128,28 @@ public:
 
 							pointLightDirection = pointLightDirection.normalize();
 							double angle = acos(pointLightDirection.dotProduct(t2.getNormal()));
+<<<<<<< HEAD
 							if ( abs(angle) > PI / 2 )
+=======
+							if (abs(angle) > PI / 2)
+>>>>>>> 2921e723c8796b077b878bd2bdca29b541088b04
 							{
 								pixelPlane[w][h].color = black;
 							}
 							pixelPlane[w][h].color = (t2.color*std::abs(cos(angle)));
 						}
-						//pixelPlane[w][h].color = t2.color;
+						pixelPlane[w][h].color = t2.color;
 					}
-				}
+				}*/
 				out << pixelPlane[w][h].color;
             }
         }
 	};
 
+	Triangle triangleHit;
+	Vertex Phit;
+	Vertex PhitS;
+	Vertex PhitMin;
     int eye; // 1 or 2
     Vertex eye1{ -1.0, 0.0, 0.0, 1.0 };
     Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };

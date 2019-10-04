@@ -19,7 +19,7 @@ public:
 
     double dotProduct(const Direction &v) const { return ((x * v.x + y * v.y + z * v.z)); };
 
-    Direction crossProduct(const Direction &v) const { return Direction(y*v.z - z * v.y, z*v.x - x * v.z, x*v.y - y * v.x); };
+    Direction crossProduct(const Direction &v) const { return Direction(y*v.z - z*v.y, -1.0*(x*v.z - z*v.x), x*v.y - y*v.x); };
 
     Direction normalize() { return Direction(x / sqrt(x*x + y * y + z * z), y / sqrt(x*x + y * y + z * z), z / sqrt(x*x + y * y + z * z)); };
 

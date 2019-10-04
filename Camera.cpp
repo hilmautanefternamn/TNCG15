@@ -68,11 +68,12 @@ public:
 							}
 						}
 
-						else {
+						else 
+                        {
 
 							pointLightDirection = pointLightDirection.normalize();
 							double angle = acos(pointLightDirection.dotProduct(t2.getNormal()));
-							if (angle > PI / 2)
+							if ( abs(angle) > PI / 2 )
 							{
 								pixelPlane[w][h].color = black;
 							}

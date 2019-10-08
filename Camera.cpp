@@ -51,6 +51,7 @@ public:
         Vertex minIntrsctPoint;
         Vertex intrsctShdwPoint;
 
+
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
         {
@@ -89,8 +90,8 @@ public:
 					{
                         // check if t2 is in object (tetra or sphere)
                         // in some cool way..
-                     
-						if (intrsctShdwPoint.z < 5.0 && (intrsctShdwPoint.z - minIntrsctPoint.z) > EPS &&  st < stMin)
+    
+						if (intrsctShdwPoint.z < 4.9 && (intrsctShdwPoint.z - minIntrsctPoint.z) > EPS &&  st < stMin)
 						{
                             stMin = st;
 						}
@@ -109,15 +110,52 @@ public:
 
                 // there's an object bewteen intersected triangle and light source => triangle shourld be in shadow
                 else if (stMin < pLightDir.length() )
-                {
+                {                  
                     pixelPlane[w][h].color = intersectTri.color * 0.4;
                 }
 
                 // surface is lit & there's no object between it and the light source
                 else
+                {
+                    double spht;
+                    Vertex temp;
+                    if (s.sph.sphereIntersect(shadowRay, spht, temp))
+                    {
+                        pixelPlane[w][h].color = intersectTri.color * 0.4;
+                    }
+                    else
+                        pixelPlane[w][h].color = (intersectTri.color*std::abs(cos(angle)));
+                }
                     //pixelPlane[w][h].color = intersectTri.color;
-                    pixelPlane[w][h].color = (intersectTri.color*std::abs(cos(angle)) );
+                    
 
+
+                // sphere intersection
+                double sphere_t;
+                Vertex sphereHit;
+                if(s.sph.sphereIntersect(ray, sphere_t, sphereHit))
+                {
+                    if (sphere_t < tMin)
+                    {
+                        pLightDir = pointLight - sphereHit;
+                        double angle{ acos((pLightDir.normalize()).dotProduct(s.sph.getSphereNormal(sphereHit))) };
+                        if (abs(angle) > (PI / 2)) pixelPlane[w][h].color = black;
+
+                        else
+                            pixelPlane[w][h].color = s.sph.color*std::abs(cos(angle));
+                    }
+
+                    // shadow rays from sphere intersection
+                /*    Ray sphereShadow(sphereHit, pointLight);
+                    double sphere_st;
+                    Vertex sphereShadowHit;
+                    if (s.sph.sphereIntersect(sphereShadow, sphere_st, sphereShadowHit))
+                    {
+                        if(sphere_st < pLightDir.length())
+                            pixelPlane[w][h].color = s.sph.color* 0.4;
+                    }*/
+                }
+   
                 // write color to output file
 				out << pixelPlane[w][h].color;
             }

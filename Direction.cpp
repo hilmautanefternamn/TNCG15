@@ -18,14 +18,14 @@ public:
         : x{ inX }, y{ inY }, z{ inZ } {};
 
     //Direction operator*(const Direction &v) const { return Direction(this * v.x, this * v.y, this * v.z); }
-    //Vertex operator/(const Vertex &v) const { return Vertex(x / v.x, y / v.y, z / v.z, 1); }
-
+    
     // vector math operations
     double dotProduct(const Direction &v) const { return (x * v.x + y * v.y + z * v.z); };
     Direction crossProduct(const Direction &v) const { return Direction(y*v.z - z*v.y, -1.0*(x*v.z - z*v.x), x*v.y - y*v.x); };
     Direction normalize() { return Direction(x / sqrt(x*x + y*y + z*z), y / sqrt(x*x + y*y + z*z), z / sqrt(x*x + y*y + z*z)); };
 	Direction operator*(const double d) const { return Direction(x*d, y*d, z*d); };
 	double length() { return( sqrt( pow(x, 2) + pow(y, 2) + pow(z, 2) ) ); };
+    Direction operator/(const double &d) const { return Direction(x / d, y / d, z / d); }
 
     // print coordinates of direction vector
     void printDirection()

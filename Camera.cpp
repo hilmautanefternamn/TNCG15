@@ -125,10 +125,9 @@ public:
                     }
                     else
                         pixelPlane[w][h].color = (intersectTri.color*std::abs(cos(angle)));
+                        //pixelPlane[w][h].color = intersectTri.color;
                 }
-                    //pixelPlane[w][h].color = intersectTri.color;
                     
-
 
                 // sphere intersection
                 double sphere_t;

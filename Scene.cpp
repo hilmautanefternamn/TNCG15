@@ -98,6 +98,23 @@ public:
         sph = { Vertex{ 7.0, -2.0, 0.0, 1.0 }, 1.0, blue };
 	};
 
+	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal)
+	{
+		
+		for (auto &tri : triangles)
+		{
+			if (tri.rayIntersection(ray, t, Phit))
+			{
+					color = tri.color;
+					normal = tri.getNormal();
+			
+			}
+		}
+
+
+
+	};
+
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];
 	Direction normals[8];

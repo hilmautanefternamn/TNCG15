@@ -18,6 +18,8 @@ public:
     Ray(const Vertex &s, const Vertex &e)
         : start{ s }, end{ e }, dir{ s - e }{};
 
+	mutable double minDist = 10000.0;
+
     Vertex start, end;
     ColorDbl color;
 	Direction dir;

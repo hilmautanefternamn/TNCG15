@@ -46,10 +46,12 @@ public:
         double lengthP{ 0.0025 };
         double hlengthP{ lengthP / 2.0 };
 
-        Triangle intersectTri;
-        Vertex intrsctPoint;
-        Vertex minIntrsctPoint;
-        Vertex intrsctShdwPoint;
+       // Triangle tHit;
+        Vertex Phit;
+        //Vertex minIntrsctPoint;
+        //Vertex intrsctShdwPoint;
+		ColorDbl color;
+		Direction hitNormal;
 
 
         // set color of every pixel in the pixelplane
@@ -61,15 +63,19 @@ public:
 
                 // intersection ray eye => triangle
                 Ray ray(eye1, pixelPoint);
-                double t{ 10000.0 };                // distance between camera and intersection point
-                double tMin{ 10000.0 };
+                double t;               // distance between camera and intersection point
+                /*double tMin{ 10000.0 };
 
                 // intersection ray triangle => light
                 double st{ 10000.0 };               // distance between light source and intersection point
-                double stMin{ 10000.0 };       
+                double stMin{ 10000.0 };       */
 			
                 // find clostest intersecting triangle to the eye
-				for (auto &tri : s.triangles)
+				s.rayIntersection(ray, t, Phit, color, hitNormal);
+				
+
+				
+			/*	for (auto &tri : s.triangles)
 				{
 					if (tri.rayIntersection(ray, t, intrsctPoint))
 					{
@@ -81,9 +87,9 @@ public:
 						    }
 					}
 				}
-
+*/
                 // check if there are any objects between intersected triangle and light source 
-                Ray shadowRay(minIntrsctPoint, pointLight);
+              /*  Ray shadowRay(minIntrsctPoint, pointLight);
 				for (auto &tri : s.triangles)
 				{
 					if (tri.rayIntersection(shadowRay, st, intrsctShdwPoint))
@@ -91,16 +97,16 @@ public:
                         // check if t2 is in object (tetra or sphere)
                         // in some cool way..
     
-						if (intrsctShdwPoint.z < 4.9 && (intrsctShdwPoint.z - minIntrsctPoint.z) > EPS &&  st < stMin)
+						if ((intrsctShdwPoint.z - minIntrsctPoint.z) > EPS &&  st < stMin)
 						{
                             stMin = st;
 						}
 					}
-				}
+				}*/
 
 				// compute angle between surface normal and light direction
-                pLightDir = pointLight - minIntrsctPoint;
-                double angle{ acos( (pLightDir.normalize()).dotProduct( intersectTri.getNormal() ) ) };
+                pLightDir = pointLight - Phit;
+                double angle{ acos( (pLightDir.normalize()).dotProduct( hitNormal) ) };
 
                 // surface is not lit by the light source
                 if ( abs(angle) > (PI / 2) )
@@ -109,41 +115,41 @@ public:
                 }
 
                 // there's an object bewteen intersected triangle and light source => triangle shourld be in shadow
-                else if (stMin < pLightDir.length() )
+               /* else if (stMin < pLightDir.length() )
                 {                  
-                    pixelPlane[w][h].color = intersectTri.color * 0.4;
-                }
+                    pixelPlane[w][h].color = color * 0.4;
+                }*/
 
                 // surface is lit & there's no object between it and the light source
                 else
                 {
-                    double spht;
+                   /* double spht;
                     Vertex temp;
                     if (s.sph.sphereIntersect(shadowRay, spht, temp))
                     {
-                        pixelPlane[w][h].color = intersectTri.color * 0.4;
+                        pixelPlane[w][h].color = tHit.color * 0.4;
                     }
-                    else
-                        pixelPlane[w][h].color = (intersectTri.color*std::abs(cos(angle)));
+                    else*/
+                        pixelPlane[w][h].color = (color*std::abs(cos(angle)));
                         //pixelPlane[w][h].color = intersectTri.color;
                 }
-                    
+				
 
                 // sphere intersection
                 double sphere_t;
                 Vertex sphereHit;
-                if(s.sph.sphereIntersect(ray, sphere_t, sphereHit))
-                {
-                    if (sphere_t < tMin)
-                    {
-                        pLightDir = pointLight - sphereHit;
-                        double angle{ acos((pLightDir.normalize()).dotProduct(s.sph.getSphereNormal(sphereHit))) };
-                        if (abs(angle) > (PI / 2)) pixelPlane[w][h].color = black;
+				if (s.sph.sphereIntersect(ray, sphere_t, sphereHit))
+				{
+					if (sphere_t < t)
+					{
+						pLightDir = pointLight - sphereHit;
+						double angle{ acos((pLightDir.normalize()).dotProduct(s.sph.getSphereNormal(sphereHit))) };
+						if (abs(angle) > (PI / 2)) pixelPlane[w][h].color = black;
 
-                        else
-                            pixelPlane[w][h].color = s.sph.color*std::abs(cos(angle));
-                    }
-
+						else
+							pixelPlane[w][h].color = s.sph.color*std::abs(cos(angle));
+					}
+				}
                     // shadow rays from sphere intersection
                 /*    Ray sphereShadow(sphereHit, pointLight);
                     double sphere_st;
@@ -153,7 +159,7 @@ public:
                         if(sphere_st < pLightDir.length())
                             pixelPlane[w][h].color = s.sph.color* 0.4;
                     }*/
-                }
+               // }
    
                 // write color to output file
 				out << pixelPlane[w][h].color;

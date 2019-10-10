@@ -46,15 +46,18 @@ public:
         double u{}, v{};
         u = { P.dotProduct(T) / a };   if (u < 0.0 || u > 1.0) return false;
         v= { Q.dotProduct(D) / a };   if (v < 0.0 || u + v > 1.0) return false;
-
+		
         t = { Q.dotProduct(E2) / a };
 
-		if (t > EPS && t < 1000000) 
-        {
-            Phit = { ray.start + Vertex(t*D.x, t*D.y, t*D.z, 1.0) };
-			return true;
-		}
+		
+		ray.minDist = t;
 
+			if (t > EPS && t < 1000000)
+			{
+				Phit = { ray.start + Vertex(t*D.x, t*D.y, t*D.z, 1.0) };
+				return true;
+			}
+		
 		return false;
     };
 

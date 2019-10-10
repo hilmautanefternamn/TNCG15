@@ -1,7 +1,7 @@
 #ifndef SCENE_CPP
 #define SCENE_CPP
 
-#include "Triangle.cpp"
+#include "Tetrahedron.cpp"
 #include "Sphere.cpp"
 #include <vector>
 
@@ -89,19 +89,17 @@ public:
         Vertex v2 { 10.6, 3.5, 0.0, w };
         Vertex v3 { 9.3, 2.0, 2.6, w };
 
-        triangles.push_back({ v0, v1, v3,  pink });     // RS
-        triangles.push_back({ v0, v3, v2,  orange });   // LS
-        triangles.push_back({v2, v3, v1, green });      // back
-        triangles.push_back({ v0, v2, v1,  cyan });     // bottom
+        tetra = {v0, v1, v2, v3, pink};
 
         // Sphere
-        sph = { Vertex{ 7.0, -2.0, 0.0, 1.0 }, 1.0, blue };
+        sph = { Vertex{ 7.0, -2.0, 0.0, 1.0 }, w, blue };
 	};
 
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];
 	Direction normals[8];
     Sphere sph;
+    Tetrahedron tetra;
 
     double w{ 1.0 };
 

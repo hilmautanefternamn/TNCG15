@@ -97,14 +97,12 @@ public:
 
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];
-	Direction normals[8];
+
     Sphere sph;
     Tetrahedron tetra;
 
-    double w{ 1.0 };
-
 private:
-
+    double w{ 1.0 };
 };
 
 #endif // !SCENE_CPP

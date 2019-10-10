@@ -104,8 +104,19 @@ public:
 			{
 					color = tri.color;
 					normal = tri.getNormal();
-			
 			}
+		}
+
+		double tTetra;
+		Vertex PhitTetra;
+		Direction normalTetra;
+
+		if(tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra) && tTetra < t)
+		{
+			color = tetra.color;
+			normal = normalTetra;
+			Phit = PhitTetra;
+			t = tTetra;
 		}
 
 

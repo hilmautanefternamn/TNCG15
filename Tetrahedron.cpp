@@ -25,13 +25,21 @@ public:
     //with the Möller - Trumbore algorithm
     // arg t = distance from ray.start to intersection point
     // arg Phit = intersection point (vertex)
-    bool rayIntersection(const Ray &ray, double &t, Vertex &Phit) 
+    bool rayIntersection(Ray &ray, double &t, Vertex &Phit, Direction &normal)
     {
+		double tMin = 10000.0;
+		bool isHit = false;
         for (auto &tri : trianglesTetra)
         {
-            if (tri.rayIntersection(ray, t, Phit)) return true;
+			if (tri.rayIntersection(ray, t, Phit) && t < tMin) 
+			{
+				tMin = t;
+				isHit = true;
+				normal = tri.getNormal();
+			}
         }
-        return false;
+
+        return isHit;
     }
 
 	Vertex v0, v1, v2, v3;

@@ -71,7 +71,7 @@ public:
                 pLightDir = pointLight - Phit;
                 double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
 
-
+    // to go in some recursive function somewhere
                 // emitt reflected and refracted ray from Phit with less importance than incoming ray
                 Direction I { (Phit - eye1).normalize() };      // incoming ray
                 Direction N { hitNormal };                      // normal of intersected surface
@@ -86,8 +86,13 @@ public:
                 
                 // shoot rays in direction R/T and keep reflecting/refracting when intersecting
                 // until a diffuse surface is hit [wall, roof or floor] 
-                // assign color of hit diffuse surface to current pixel in pixel plane 
+                // return color of hit diffuse surface to assign to current pixel in pixel plane
 
+                // base case: intersection with diffuse surface [wall, roof or floor]
+                    // return color of surface
+                // else: keep shooting rays
+
+    //--------------------------------------//
 
                 // check if there are any objects between intersected triangle and light source 
                 Ray shadowRay(Phit, pointLight);

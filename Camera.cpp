@@ -41,19 +41,17 @@ public:
         int size{ 800 };
 		std::ofstream out("out.ppm");
 		out << "P3\n" << size << ' ' << size << ' ' << "255\n";
-
+        
+        // to the pixel plane
 		Vertex pixelPoint;
         double lengthP{ 0.0025 };
         double hlengthP{ lengthP / 2.0 };
-		//ray
+		
+        // Ray to find intersections
         Vertex Phit;
 		ColorDbl color;
 		Direction hitNormal;
 		
-		//shadowray
-		Vertex PhitS;
-		ColorDbl colorS;
-		Direction hitNormalS;
 
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
@@ -62,50 +60,39 @@ public:
             {
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
 
-                // intersection ray: eye => triangle
-                Ray ray(eye1, pixelPoint);
-                double t = 10000.0;		// distance between camera and intersection point
-
                 // find clostest intersecting triangle to the eye
-				s.rayIntersection(ray, t, Phit, color, hitNormal);
+                Ray ray(eye1, pixelPoint);  
+                double t{};		            // distance between camera and intersection point
 				
-				// check if there are any objects between intersected triangle and light source 
-				Ray shadowRay(Phit, pointLight);
-				double st = 10000.0;	// distance between intersection point and point light
-				
-				s.rayIntersection(shadowRay, st, PhitS, colorS, hitNormalS);
-                
-             
+                s.rayIntersection(ray, t, Phit, color, hitNormal);               
+
 
 				// compute angle between surface normal and light direction
-				//Phit.printVertex();
                 pLightDir = pointLight - Phit;
-				//cout << "sr length: " << shadowRay.dir.length() << endl;
                 double angle{ acos( (pLightDir.normalize()).dotProduct( hitNormal) ) };
 
-				//cout << "st: " << st << endl;
-				//cout << "length: " << pLightDir.length() << endl;
 
+                // check if there are any objects between intersected triangle and light source 
+                Ray shadowRay(Phit, pointLight);
+                double lightDist = pLightDir.length();
+
+
+                /*--    3 COLOR CASES   --*/
+                
                 // surface is not lit by the light source
                 if ( abs(angle) > (PI / 2) )
-                {
                     pixelPlane[w][h].color = black;
-                }
 
                 // there's an object bewteen intersected triangle and light source => triangle should be in shadow
-                else if (st < pLightDir.length())
-                {                  
+                else if ( s.shadowRayIntersection(shadowRay, lightDist))
                     pixelPlane[w][h].color = color * 0.4;
-                }
 
                 // surface is lit & there's no object between it and the light source
                 else
-                {
                     pixelPlane[w][h].color = (color*std::abs(cos(angle)));
-                    //pixelPlane[w][h].color = color;
-                }
-				
-   
+
+                /*------------------------*/
+
                 // write color to output file
 				out << pixelPlane[w][h].color;
             }

@@ -45,11 +45,10 @@ public:
 	
         double u{}, v{};
         u = { P.dotProduct(T) / a };   if (u < 0.0 || u > 1.0) return false;
-        v= { Q.dotProduct(D) / a };   if (v < 0.0 || u + v > 1.0) return false;
+        v = { Q.dotProduct(D) / a };   if (v < 0.0 || u + v > 1.0) return false;
 		
         t = { Q.dotProduct(E2) / a };
 		
-
 			if (t > EPS && t < 1000000.0)
 			{
 				Phit = { ray.start + Vertex(t*D.x, t*D.y, t*D.z, 1.0) };
@@ -66,6 +65,7 @@ public:
 		std::cout << v2.x << " " << v2.y << " " << v2.z << std::endl;
 	};
 	
+    // normalized normal of triangle
 	Direction getNormal()
 	{
         Direction d0{ v1 - v0 };
@@ -75,7 +75,6 @@ public:
 		return Direction(normal.normalize());
 	}
 
-	Vertex PhitT;
 	Vertex v0, v1, v2;
 	Direction normal;
 	ColorDbl color;

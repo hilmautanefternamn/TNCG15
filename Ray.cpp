@@ -16,16 +16,14 @@ public:
 
     // constructor to create ray from start- and end vertex
     Ray(const Vertex &s, const Vertex &e)
-        : start{ s }, end{ e }, dir{ s - e }{};
-
-	mutable double minDist = 10000.0;
+        : start{ s }, end{ e }/*, dir{ s - e }*/{};
 
     Vertex start, end;
     ColorDbl color;
-	Direction dir;
-private:
-    //Triangle &triangles;
+	//Direction dir;
 
+private:
+  
 };
 
 #endif // !RAY_CPP

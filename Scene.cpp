@@ -22,6 +22,7 @@ public:
 
     //void findIntersecRay(Ray arg) {};
 
+    // Triangle soup
     void createScene()
     {
         vertices[0] = Vertex(-3.0, 0.0, -5.0, w);
@@ -41,14 +42,19 @@ public:
         vertices[13] = Vertex(0.0, -6.0, 5.0, w);
 
         ColorDbl white{ 255.0, 255.0, 255.0 };
-        ColorDbl red{ 255.0, 0.0, 0.0 };
-        ColorDbl blue{ 0.0, 0.0, 255.0 };
-        ColorDbl green{ 0.0, 255.0, 0.0 };
+        ColorDbl red{ 120, 20, 20 };
+        ColorDbl blue{ 20, 25, 110 };
         ColorDbl orange{ 255.0, 165.0, 0.0 };
         ColorDbl cyan{ 0.0, 255.0, 255.0 };
-        ColorDbl yellow{ 255.0, 255.0, 0.0 };
-        ColorDbl grey{ 100.0, 100.0, 100.0 };
         ColorDbl pink{ 255.0, 20.0, 147.0 };
+        
+        // wall colors
+        ColorDbl purple{ 130, 120, 145 };
+        ColorDbl green{ 23, 61, 42 };
+        ColorDbl yellow{ 200, 145, 70 };
+        ColorDbl grey{ 180, 165, 145 };
+        ColorDbl brown{ 95, 70, 20 };
+        ColorDbl granite{ 100, 115, 90 };
 
         // floor
         triangles.push_back({ vertices[1], vertices[2], vertices[0], white });
@@ -65,23 +71,23 @@ public:
         triangles.push_back({ vertices[8], vertices[12], vertices[13], white });
         triangles.push_back({ vertices[8], vertices[13], vertices[7], white });
         // VB
-        triangles.push_back({ vertices[2], vertices[7], vertices[0], blue });
-        triangles.push_back({ vertices[2], vertices[9], vertices[7], blue });
+        triangles.push_back({ vertices[2], vertices[7], vertices[0], granite });
+        triangles.push_back({ vertices[2], vertices[9], vertices[7], granite });
         // B
-        triangles.push_back({ vertices[3], vertices[9], vertices[2], green });
-        triangles.push_back({ vertices[3], vertices[10], vertices[9], green });
+        triangles.push_back({ vertices[2], vertices[10], vertices[9], yellow });
+        triangles.push_back({ vertices[2], vertices[3], vertices[10], yellow });
         // HB
-        triangles.push_back({ vertices[4], vertices[10], vertices[3], red });
-        triangles.push_back({ vertices[4], vertices[11], vertices[10], blue });
+        triangles.push_back({ vertices[4], vertices[10], vertices[3], purple });
+        triangles.push_back({ vertices[4], vertices[11], vertices[10], green });
         // HF
-        triangles.push_back({ vertices[5], vertices[11], vertices[4], green });
-        triangles.push_back({ vertices[5], vertices[12], vertices[11], orange });
+        triangles.push_back({ vertices[4], vertices[12], vertices[11], green });
+        triangles.push_back({ vertices[4], vertices[5], vertices[12], grey });
         // F
-        triangles.push_back({ vertices[6], vertices[12], vertices[5], cyan });
-        triangles.push_back({ vertices[6], vertices[13], vertices[12], cyan });
+        triangles.push_back({ vertices[5], vertices[13], vertices[12], brown });
+        triangles.push_back({ vertices[5], vertices[6], vertices[13], brown });
         // VF
-        triangles.push_back({ vertices[0], vertices[13], vertices[6], yellow });
-        triangles.push_back({ vertices[0], vertices[7], vertices[13], yellow });
+        triangles.push_back({ vertices[0], vertices[13], vertices[6], red });
+        triangles.push_back({ vertices[0], vertices[7], vertices[13], red });
 
         // Tetrahedron
         Vertex v0{ 8.0, 2.0, 0.0, w };
@@ -89,16 +95,19 @@ public:
         Vertex v2 { 10.6, 3.5, 0.0, w };
         Vertex v3 { 9.3, 2.0, 2.6, w };
 
-        tetra = {v0, v1, v2, v3, pink};
+        tetra = { v0, v1, v2, v3, red };
 
         // Sphere
         sph = { Vertex{ 7.0, -2.0, 0.0, 1.0 }, w, blue };
 	};
 
+    // find intersections between ray from eye and triangles, tetrahedrons and speheres 
 	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal)
 	{
+        // find intersections with scene walls, roof and floor
 		double tTri;
 		Vertex PhitTri;
+
 		for (auto &tri : triangles)
 		{
 			if (tri.rayIntersection(ray, tTri, PhitTri))
@@ -107,20 +116,18 @@ public:
 					normal = tri.getNormal();
 					t = tTri;
 					Phit = PhitTri;
-
 			}
 		}
 
+        // find intersections with tetrahedron
 		double tTetra;
 		Vertex PhitTetra;
 		Direction normalTetra;
-		//cout << "t2: " << t2 << endl;
 
 		if(tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra))
 		{
 			if (tTetra < t)
-			{
-
+            {
 				color = tetra.color;
 				normal = normalTetra;
 				Phit = PhitTetra;
@@ -128,6 +135,7 @@ public:
 			}
 		}
 
+        // find intersections with sphere
 		double sphere_t;
 		Vertex sphereHit;
 		if (sph.sphereIntersect(ray, sphere_t, sphereHit))
@@ -140,8 +148,29 @@ public:
 				t = sphere_t;
 			}
 		}
-		
 	};
+
+    // find wheather or not the intersected point is in shadow 
+    bool shadowRayIntersection(Ray &ray, double &t)
+    {
+        // find intersections with tetrahedron
+        double tTetra;
+        Vertex PhitTetra;
+        Direction normalTetra;
+
+        if (tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra) && tTetra < t)
+            return true;
+            
+        // find intersections with sphere
+        double sphere_t;
+        Vertex sphereHit;
+        if (sph.sphereIntersect(ray, sphere_t, sphereHit) && sphere_t < t)
+            return true;
+
+
+        return false;
+    };
+
 
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];

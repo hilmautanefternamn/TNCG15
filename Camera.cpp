@@ -45,13 +45,15 @@ public:
 		Vertex pixelPoint;
         double lengthP{ 0.0025 };
         double hlengthP{ lengthP / 2.0 };
-
+		//ray
         Vertex Phit;
-        //Vertex minIntrsctPoint;
-        //Vertex intrsctShdwPoint;
 		ColorDbl color;
 		Direction hitNormal;
-
+		
+		//shadowray
+		Vertex PhitS;
+		ColorDbl colorS;
+		Direction hitNormalS;
 
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
@@ -70,9 +72,7 @@ public:
 				// check if there are any objects between intersected triangle and light source 
 				Ray shadowRay(Phit, pointLight);
 				double st = 10000.0;	// distance between intersection point and point light
-				Vertex PhitS;
-				ColorDbl colorS;
-				Direction hitNormalS;
+				
 				s.rayIntersection(shadowRay, st, PhitS, colorS, hitNormalS);
                 
              

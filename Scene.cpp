@@ -143,6 +143,35 @@ public:
 		
 	};
 
+	void shadowrayIntersection(Ray &ray, double &t, Vertex &Phit)
+	{
+		double tTetra;
+		Vertex PhitTetra;
+		Direction normalTetra;
+		//cout << "t2: " << t2 << endl;
+
+		if (tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra))
+		{
+			if (tTetra < t)
+			{
+				Phit = PhitTetra;
+				t = tTetra;
+			}
+		}
+
+		double sphere_t;
+		Vertex sphereHit;
+		if (sph.sphereIntersect(ray, sphere_t, sphereHit))
+		{
+			if (sphere_t < t)
+			{
+				Phit = sphereHit;
+				t = sphere_t;
+			}
+		}
+	};
+
+
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];
 

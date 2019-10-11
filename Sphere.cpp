@@ -26,6 +26,8 @@ public:
         double d1 = -(b / 2) + sqrt(d);
         double d2 = -(b / 2) - sqrt(d);
 
+		if (abs(d1) < 0.01 || abs(d2) < 0.01) return false;
+
         t = (d1 < d2) ? d1 : d2;
         Phit = o + Vertex(l.x, l.y, l.z, 1.0)*t;
 

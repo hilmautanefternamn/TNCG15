@@ -5,7 +5,7 @@
 #include "Ray.cpp"
 #include "ColorDbl.cpp"
 
-const double EPS = 1e-4;
+const double EPS = 1e-3;
 
 /*The triangle is defined by three objects of the class Vertex.
 The Triangle has a color, which we represent by an instance of ColorDbl.

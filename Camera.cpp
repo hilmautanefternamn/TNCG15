@@ -73,7 +73,7 @@ public:
 				Ray shadowRay(Phit, pointLight);
 				double st = 10000.0;	// distance between intersection point and point light
 				
-				s.rayIntersection(shadowRay, st, PhitS, colorS, hitNormalS);
+				s.shadowrayIntersection(shadowRay, st, PhitS);
                 
              
 
@@ -91,7 +91,6 @@ public:
                 {
                     pixelPlane[w][h].color = black;
                 }
-
                 // there's an object bewteen intersected triangle and light source => triangle should be in shadow
                 else if (st < pLightDir.length())
                 {                  

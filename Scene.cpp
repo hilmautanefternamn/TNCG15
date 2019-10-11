@@ -101,7 +101,7 @@ public:
         sph = { Vertex{ 7.0, -2.0, 0.0, 1.0 }, w, blue };
 	};
 
-    // find intersections between ray from eye and triangles, tetrahedrons and speheres 
+    // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
 	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal)
 	{
         // find intersections with scene walls, roof and floor

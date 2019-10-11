@@ -56,20 +56,37 @@ public:
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
         {
-            for (int w = size-1; w >= 0; w--)   // y
+            for (int w = size - 1; w >= 0; w--)   // y
             {
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
 
                 // find clostest intersecting triangle to the eye
-                Ray ray(eye1, pixelPoint);  
+                Ray ray(eye1, pixelPoint);
                 double t{};		            // distance between camera and intersection point
-				
-                s.rayIntersection(ray, t, Phit, color, hitNormal);               
+
+                s.rayIntersection(ray, t, Phit, color, hitNormal);
 
 
-				// compute angle between surface normal and light direction
+                // compute angle between surface normal and light direction
                 pLightDir = pointLight - Phit;
-                double angle{ acos( (pLightDir.normalize()).dotProduct( hitNormal) ) };
+                double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
+
+
+                // emitt reflected and refracted ray from Phit with less importance than incoming ray
+                Direction I { (Phit - eye1).normalize() };      // incoming ray
+                Direction N { hitNormal };                      // normal of intersected surface
+                double N_dot_I = N.dotProduct(I);
+                double n1 { 1 };     // air
+                double n2 { 1.5 };   // glass
+                double n { n1 / n2 };
+                // reflected direction
+                Direction R { (I - N * 2 * (N_dot_I)).normalize() };  
+                // refracted direction
+                Direction T { (I*n + N*( -n*(N_dot_I) - sqrt(1 - n*n*(1 - N_dot_I*N_dot_I ) ) )).normalize() };   
+                
+                // shoot rays in direction R/T and keep reflecting/refracting when intersecting
+                // until a diffuse surface is hit [wall, roof or floor] 
+                // assign color of hit diffuse surface to current pixel in pixel plane 
 
 
                 // check if there are any objects between intersected triangle and light source 
@@ -99,7 +116,6 @@ public:
         }
 	};
 
-    int eye; // 1 or 2
     Vertex eye1{ -1.0, 0.0, 0.0, 1.0 };
     Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };
 	std::vector<std::vector<Pixel>>pixelPlane;

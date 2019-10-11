@@ -17,7 +17,7 @@ public:
     // constructor to create ray from start- and end vertex
     Ray(const Vertex &s, const Vertex &e)
         : start{ s }, end{ e }/*, dir{ s - e }*/{};
-
+    
     Vertex start, end;
     ColorDbl color;
 	//Direction dir;

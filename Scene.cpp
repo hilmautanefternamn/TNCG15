@@ -97,30 +97,50 @@ public:
 
 	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal)
 	{
-		
+		double tTri;
+		Vertex PhitTri;
 		for (auto &tri : triangles)
 		{
-			if (tri.rayIntersection(ray, t, Phit))
+			if (tri.rayIntersection(ray, tTri, PhitTri))
 			{
 					color = tri.color;
 					normal = tri.getNormal();
+					t = tTri;
+					Phit = PhitTri;
+
 			}
 		}
 
 		double tTetra;
 		Vertex PhitTetra;
 		Direction normalTetra;
+		//cout << "t2: " << t2 << endl;
 
-		if(tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra) && tTetra < t)
+		if(tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra))
 		{
-			color = tetra.color;
-			normal = normalTetra;
-			Phit = PhitTetra;
-			t = tTetra;
+			if (tTetra < t)
+			{
+
+				color = tetra.color;
+				normal = normalTetra;
+				Phit = PhitTetra;
+				t = tTetra;
+			}
 		}
 
-
-
+		double sphere_t;
+		Vertex sphereHit;
+		if (sph.sphereIntersect(ray, sphere_t, sphereHit))
+		{
+			if (sphere_t < t)
+			{
+				color = sph.color;
+				normal = sph.getSphereNormal(sphereHit);
+				Phit = sphereHit;
+				t = sphere_t;
+			}
+		}
+		
 	};
 
 	std::vector<Triangle> triangles;

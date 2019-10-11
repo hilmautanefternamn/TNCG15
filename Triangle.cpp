@@ -48,11 +48,9 @@ public:
         v= { Q.dotProduct(D) / a };   if (v < 0.0 || u + v > 1.0) return false;
 		
         t = { Q.dotProduct(E2) / a };
-
 		
-		ray.minDist = t;
 
-			if (t > EPS && t < 1000000)
+			if (t > EPS && t < 1000000.0)
 			{
 				Phit = { ray.start + Vertex(t*D.x, t*D.y, t*D.z, 1.0) };
 				return true;

@@ -33,7 +33,7 @@ public:
         Direction T{ ray.start - v0 };
         Direction E1{ v1 - v0 };
         Direction E2{ v2 - v0 };
-        Direction D{ ray.end - ray.start };
+        Direction D = ray.dir;
         D.normalize();
         Direction P{ D.crossProduct(E2) };
         Direction Q{ T.crossProduct(E1) };

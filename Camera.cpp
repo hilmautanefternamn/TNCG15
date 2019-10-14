@@ -62,29 +62,37 @@ public:
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
 
                 // find clostest intersecting triangle to the eye
-                Ray ray(eye1, pixelPoint);
+				Direction rayD = pixelPoint - eye1;
+                Ray ray(eye1, rayD);
                 double t{};		            // distance between camera and intersection point
+
 
                 // find clostest intersecting triangle to the eye
 				s.rayIntersection(ray, t, Phit, color, hitNormal);
 				
+				
 				// check if there are any objects between intersected triangle and light source 
-				Ray shadowRay(Phit, pointLight);
-				double st = 10000.0;	    // distance between intersection point and point light
+                Direction srayD = pointLight - Phit;
+                Ray shadowRay(Phit, srayD);
+				double st = 10000.0;	// distance between intersection point and point light
 				
 				s.shadowrayIntersection(shadowRay, st, PhitS);
                 
-             
-
 
                 // compute angle between surface normal and light direction
                 pLightDir = pointLight - Phit;
                 double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
 
+
+    //--------------------------------------//
+                
+                Vertex prevHit{ eye1 };
+        // if: tetraintersect || sphereintersect
+                
 				// to go in some recursive function somewhere
                 // emitt reflected and refracted ray from Phit with less importance than incoming ray
-                Direction I { (Phit - eye1).normalize() };      // incoming ray
-                Direction N { hitNormal };                      // normal of intersected surface
+                Direction I { (Phit - prevHit).normalize() };       // incoming ray
+                Direction N { hitNormal };                          // normal of intersected surface
                 double N_dot_I = N.dotProduct(I);
                 double n1 { 1 };     // air
                 double n2 { 1.5 };   // glass
@@ -98,9 +106,9 @@ public:
                 // until a diffuse surface is hit [wall, roof or floor] 
                 // return color of hit diffuse surface to assign to current pixel in pixel plane
 
-                // base case: intersection with diffuse surface [wall, roof or floor]
-                    // return color of surface
-                // else: keep shooting rays
+
+        // else: base case: intersection with diffuse surface [wall, roof or floor]
+                // return color of surface
 
     //--------------------------------------//
 

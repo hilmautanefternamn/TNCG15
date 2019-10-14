@@ -150,6 +150,7 @@ public:
 		}
 	};
 
+    // danne deleted my comment
 	void shadowrayIntersection(Ray &ray, double &t, Vertex &Phit)
 	{
 		double tTetra;

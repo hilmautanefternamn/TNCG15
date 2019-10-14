@@ -63,14 +63,16 @@ public:
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
 
                 // find clostest intersecting triangle to the eye
-                Ray ray(eye1, pixelPoint);
+				Direction rayD = pixelPoint - eye1;
+                Ray ray(eye1, rayD);
                 double t{};		            // distance between camera and intersection point
 
                 // find clostest intersecting triangle to the eye
 				s.rayIntersection(ray, t, Phit, color, hitNormal);
 				
+				Direction srayD = pointLight - Phit;
 				// check if there are any objects between intersected triangle and light source 
-				Ray shadowRay(Phit, pointLight);
+				Ray shadowRay(Phit, srayD);
 				double st = 10000.0;	// distance between intersection point and point light
 				
 				s.shadowrayIntersection(shadowRay, st, PhitS);

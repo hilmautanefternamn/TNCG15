@@ -14,7 +14,8 @@ public:
     bool sphereIntersect(const Ray &ray, double &t, Vertex &Phit) 
     { 
         Vertex o = ray.start;   // origin
-        Direction l = (ray.end - ray.start).normalize();
+        Direction l = ray.dir;
+		l = l.normalize();
         double a = l.dotProduct(l);
         double b = (l * 2).dotProduct(o - center);
         double c = (o - center).dotProduct(o - center) - (radius * radius);

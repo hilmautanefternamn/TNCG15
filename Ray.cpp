@@ -15,12 +15,12 @@ public:
     Ray() {};
 
     // constructor to create ray from start- and end vertex
-    Ray(const Vertex &s, const Vertex &e)
-        : start{ s }, end{ e }/*, dir{ s - e }*/{};
+    Ray(const Vertex &s, const Direction &d)
+        : start{ s }, dir{ d }/*, dir{ s - e }*/{};
     
-    Vertex start, end;
+    Vertex start;
     ColorDbl color;
-	//Direction dir;
+	Direction dir;
 
 private:
   

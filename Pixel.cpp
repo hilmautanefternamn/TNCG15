@@ -19,12 +19,10 @@ public:
     Pixel(ColorDbl c)
         : color{ c } {};
 
-    ColorDbl getColor() { return color; }
-
 	ColorDbl color;
+
 private:
-    
-    //  Ray& rays;
+
 };
 
 #endif // !PIXEL_CPP

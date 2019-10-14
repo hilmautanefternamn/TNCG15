@@ -22,14 +22,14 @@ public:
 	};
 
     // compute intersection between a Ray and Triangle in tetrahedron 
-    //with the Möller - Trumbore algorithm
+    //with the Mï¿½ller - Trumbore algorithm
     // arg t = distance from ray.start to intersection point
     // arg Phit = intersection point (vertex)
     bool rayIntersection(Ray &ray, double &t, Vertex &Phit, Direction &normal)
     {
 		Vertex tetraHit;
 		double tMin = 10000.0;
-		bool isHit = false;
+        bool isHit = false;
         for (auto &tri : trianglesTetra)
         {
 			if (tri.rayIntersection(ray, t, tetraHit) && t < tMin) 
@@ -41,7 +41,6 @@ public:
 
 			}
         }
-
         return isHit;
     }
 

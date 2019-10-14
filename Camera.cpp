@@ -41,30 +41,28 @@ public:
         int size{ 800 };
 		std::ofstream out("out.ppm");
 		out << "P3\n" << size << ' ' << size << ' ' << "255\n";
-
+        
+        // to the pixel plane
 		Vertex pixelPoint;
         double lengthP{ 0.0025 };
         double hlengthP{ lengthP / 2.0 };
-		//ray
+		
+        // Ray to find intersections
         Vertex Phit;
 		ColorDbl color;
 		Direction hitNormal;
 		
-		//shadowray
-		Vertex PhitS;
-		ColorDbl colorS;
-		Direction hitNormalS;
 
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
         {
-            for (int w = size-1; w >= 0; w--)   // y
+            for (int w = size - 1; w >= 0; w--)   // y
             {
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
 
-                // intersection ray: eye => triangle
+                // find clostest intersecting triangle to the eye
                 Ray ray(eye1, pixelPoint);
-                double t = 10000.0;		// distance between camera and intersection point
+                double t{};		            // distance between camera and intersection point
 
                 // find clostest intersecting triangle to the eye
 				s.rayIntersection(ray, t, Phit, color, hitNormal);
@@ -77,41 +75,61 @@ public:
                 
              
 
-				// compute angle between surface normal and light direction
-				//Phit.printVertex();
+
+                // compute angle between surface normal and light direction
                 pLightDir = pointLight - Phit;
-				//cout << "sr length: " << shadowRay.dir.length() << endl;
-                double angle{ acos( (pLightDir.normalize()).dotProduct( hitNormal) ) };
+                double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
 
-				//cout << "st: " << st << endl;
-				//cout << "length: " << pLightDir.length() << endl;
+    // to go in some recursive function somewhere
+                // emitt reflected and refracted ray from Phit with less importance than incoming ray
+                Direction I { (Phit - eye1).normalize() };      // incoming ray
+                Direction N { hitNormal };                      // normal of intersected surface
+                double N_dot_I = N.dotProduct(I);
+                double n1 { 1 };     // air
+                double n2 { 1.5 };   // glass
+                double n { n1 / n2 };
+                // reflected direction
+                Direction R { (I - N * 2 * (N_dot_I)).normalize() };  
+                // refracted direction
+                Direction T { (I*n + N*( -n*(N_dot_I) - sqrt(1 - n*n*(1 - N_dot_I*N_dot_I ) ) )).normalize() };   
+                
+                // shoot rays in direction R/T and keep reflecting/refracting when intersecting
+                // until a diffuse surface is hit [wall, roof or floor] 
+                // return color of hit diffuse surface to assign to current pixel in pixel plane
 
+                // base case: intersection with diffuse surface [wall, roof or floor]
+                    // return color of surface
+                // else: keep shooting rays
+
+    //--------------------------------------//
+
+                // check if there are any objects between intersected triangle and light source 
+                Ray shadowRay(Phit, pointLight);
+                double lightDist = pLightDir.length();
+
+
+                /*--    3 COLOR CASES   --*/
+                
                 // surface is not lit by the light source
                 if ( abs(angle) > (PI / 2) )
-                {
                     pixelPlane[w][h].color = black;
                 }
                 // there's an object bewteen intersected triangle and light source => triangle should be in shadow
-                else if (st < pLightDir.length())
-                {                  
+                else if ( s.shadowRayIntersection(shadowRay, lightDist))
                     pixelPlane[w][h].color = color * 0.4;
-                }
 
                 // surface is lit & there's no object between it and the light source
                 else
-                {
                     pixelPlane[w][h].color = (color*std::abs(cos(angle)));
-                    //pixelPlane[w][h].color = color;
-                }
-				
-   
+
+                /*------------------------*/
+
                 // write color to output file
 				out << pixelPlane[w][h].color;
             }
         }
 	};
 
-    int eye; // 1 or 2
     Vertex eye1{ -1.0, 0.0, 0.0, 1.0 };
     Vertex eye2{ -1.0, 0.0, 0.0, 1.0 };
 	std::vector<std::vector<Pixel>>pixelPlane;

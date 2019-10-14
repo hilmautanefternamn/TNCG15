@@ -51,7 +51,6 @@ public:
         Vertex Phit;
 		ColorDbl color;
 		Direction hitNormal;
-
 		Vertex PhitS;
 		
 
@@ -71,7 +70,7 @@ public:
 				
 				// check if there are any objects between intersected triangle and light source 
 				Ray shadowRay(Phit, pointLight);
-				double st = 10000.0;	// distance between intersection point and point light
+				double st = 10000.0;	    // distance between intersection point and point light
 				
 				s.shadowrayIntersection(shadowRay, st, PhitS);
                 
@@ -106,9 +105,6 @@ public:
     //--------------------------------------//
 
                 
-          
-
-
                 /*--    3 COLOR CASES   --*/
                 
                 // surface is not lit by the light source
@@ -116,7 +112,7 @@ public:
                     pixelPlane[w][h].color = black;
            
                 // there's an object bewteen intersected triangle and light source => triangle should be in shadow
-                else if ( st < pLightDir.length())
+                else if ( st < pLightDir.length() )
                     pixelPlane[w][h].color = color * 0.4;
 
                 // surface is lit & there's no object between it and the light source

@@ -83,38 +83,6 @@ public:
                 pLightDir = pointLight - Phit;
                 double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
 
-
-    //--------------------------------------//
-                
-                Vertex prevHit{ eye1 };
-        // if: tetraintersect || sphereintersect
-                
-				// to go in some recursive function somewhere
-                // emitt reflected and refracted ray from Phit with less importance than incoming ray
-                Direction I { (Phit - prevHit).normalize() };       // incoming ray
-                Direction N { hitNormal };                          // normal of intersected surface
-                double N_dot_I = N.dotProduct(I);
-                double n1 { 1 };     // air
-                double n2 { 1.5 };   // glass
-                double n { n1 / n2 };
-                // reflected direction
-                Direction R { (I - N * 2 * (N_dot_I)).normalize() };  
-                Ray dirR{ Phit, R };
-
-                // refracted direction
-                Direction T { (I*n + N*( -n*(N_dot_I) - sqrt(1 - n*n*(1 - N_dot_I*N_dot_I ) ) )).normalize() };  
-                Ray dirT{ Phit, T };
-                
-                // shoot rays in direction R/T and keep reflecting/refracting when intersecting
-                // until a diffuse surface is hit [wall, roof or floor] 
-                // return color of hit diffuse surface to assign to current pixel in pixel plane
-
-
-        // else: base case: intersection with diffuse surface [wall, roof or floor]
-                // return color of surface
-
-    //--------------------------------------//
-
                 
                 /*--    3 COLOR CASES   --*/
                 

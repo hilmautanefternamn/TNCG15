@@ -27,15 +27,18 @@ public:
     // arg Phit = intersection point (vertex)
     bool rayIntersection(Ray &ray, double &t, Vertex &Phit, Direction &normal)
     {
+		Vertex tetraHit;
 		double tMin = 10000.0;
 		bool isHit = false;
         for (auto &tri : trianglesTetra)
         {
-			if (tri.rayIntersection(ray, t, Phit) && t < tMin) 
+			if (tri.rayIntersection(ray, t, tetraHit) && t < tMin) 
 			{
 				tMin = t;
 				isHit = true;
 				normal = tri.getNormal();
+				Phit = tetraHit;
+
 			}
         }
 

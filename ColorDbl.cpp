@@ -7,6 +7,9 @@ using namespace std;
 /* ColorDbl has three double precision variables that contain the intensities in the
 red, green and blue channel.*/
 
+enum surfaceType { reflective, diffuse };
+
+
 class ColorDbl
 {
 public:

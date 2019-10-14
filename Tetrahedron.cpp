@@ -12,13 +12,13 @@ public:
     Tetrahedron() {};
 
     // constructor to create tetrahedron from four vertices
-    Tetrahedron(Vertex _v0, Vertex _v1, Vertex _v2, Vertex _v3, ColorDbl c)
-        :v0{ _v0 }, v1{ _v1 }, v2{ _v2 }, v3{ _v3 }, color{ c }
+    Tetrahedron(Vertex _v0, Vertex _v1, Vertex _v2, Vertex _v3, ColorDbl c, surfaceType sT)
+        :v0{ _v0 }, v1{ _v1 }, v2{ _v2 }, v3{ _v3 }, color{ c }, sType(sT)
 	{
-        trianglesTetra.push_back({ v0, v1, v3,  color });       // RS
-        trianglesTetra.push_back({ v0, v3, v2,  color });       // LS
-        trianglesTetra.push_back({ v2, v3, v1, color });        // back
-        trianglesTetra.push_back({ v0, v2, v1,  color });       // bottom
+        trianglesTetra.push_back({ v0, v1, v3,  color, sType });       // RS
+        trianglesTetra.push_back({ v0, v3, v2,  color, sType });       // LS
+        trianglesTetra.push_back({ v2, v3, v1, color, sType });        // back
+        trianglesTetra.push_back({ v0, v2, v1,  color, sType });       // bottom
 	};
 
     // compute intersection between a Ray and Triangle in tetrahedron 
@@ -47,7 +47,7 @@ public:
 	Vertex v0, v1, v2, v3;
     std::vector<Triangle> trianglesTetra;
     ColorDbl color;
-
+	surfaceType sType;
 	private:
 };
 

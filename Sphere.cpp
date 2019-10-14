@@ -8,8 +8,8 @@ public:
     Sphere() {};
     
     // constructor to create sphere from center point, radius and color
-    Sphere(Vertex c, double r, ColorDbl co)
-        :center{ c }, radius{ r }, color{ co } {};
+    Sphere(Vertex c, double r, ColorDbl co, surfaceType sType)
+        :center{ c }, radius{ r }, color{ co },sType(sType) {};
     
     bool sphereIntersect(const Ray &ray, double &t, Vertex &Phit) 
     { 
@@ -43,4 +43,6 @@ public:
     Vertex center;
     double radius;
     ColorDbl color;
+	surfaceType sType;
+
 };

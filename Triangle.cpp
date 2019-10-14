@@ -20,8 +20,8 @@ public:
     Triangle() {};
 
     // constructor to create triangle from 3 vertices and a color
-    Triangle(Vertex inv0, Vertex inv1, Vertex inv2, ColorDbl c)
-        :v0{ inv0 }, v1{ inv1 }, v2{ inv2 }, color{ c }
+    Triangle(Vertex inv0, Vertex inv1, Vertex inv2, ColorDbl c, surfaceType sType)
+        :v0{ inv0 }, v1{ inv1 }, v2{ inv2 }, color{ c }, sType(sType)
     {
         normal = { this->getNormal() };
         normal.printDirection();
@@ -78,6 +78,7 @@ public:
 	Vertex v0, v1, v2;
 	Direction normal;
 	ColorDbl color;
+	surfaceType sType;
 
 private:
   

@@ -155,7 +155,6 @@ public:
 		double tTetra;
 		Vertex PhitTetra;
 		Direction normalTetra;
-		//cout << "t2: " << t2 << endl;
 
 		if (tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra))
 		{

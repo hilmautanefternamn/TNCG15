@@ -51,6 +51,8 @@ public:
         Vertex Phit;
 		ColorDbl color;
 		Direction hitNormal;
+
+		Vertex PhitS;
 		
 
         // set color of every pixel in the pixelplane
@@ -80,7 +82,7 @@ public:
                 pLightDir = pointLight - Phit;
                 double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
 
-    // to go in some recursive function somewhere
+				// to go in some recursive function somewhere
                 // emitt reflected and refracted ray from Phit with less importance than incoming ray
                 Direction I { (Phit - eye1).normalize() };      // incoming ray
                 Direction N { hitNormal };                      // normal of intersected surface
@@ -103,9 +105,8 @@ public:
 
     //--------------------------------------//
 
-                // check if there are any objects between intersected triangle and light source 
-                Ray shadowRay(Phit, pointLight);
-                double lightDist = pLightDir.length();
+                
+          
 
 
                 /*--    3 COLOR CASES   --*/
@@ -113,9 +114,9 @@ public:
                 // surface is not lit by the light source
                 if ( abs(angle) > (PI / 2) )
                     pixelPlane[w][h].color = black;
-                }
+           
                 // there's an object bewteen intersected triangle and light source => triangle should be in shadow
-                else if ( s.shadowRayIntersection(shadowRay, lightDist))
+                else if ( st < pLightDir.length())
                     pixelPlane[w][h].color = color * 0.4;
 
                 // surface is lit & there's no object between it and the light source

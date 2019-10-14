@@ -99,8 +99,11 @@ public:
                 double n { n1 / n2 };
                 // reflected direction
                 Direction R { (I - N * 2 * (N_dot_I)).normalize() };  
+                Ray dirR{ Phit, R };
+
                 // refracted direction
-                Direction T { (I*n + N*( -n*(N_dot_I) - sqrt(1 - n*n*(1 - N_dot_I*N_dot_I ) ) )).normalize() };   
+                Direction T { (I*n + N*( -n*(N_dot_I) - sqrt(1 - n*n*(1 - N_dot_I*N_dot_I ) ) )).normalize() };  
+                Ray dirT{ Phit, T };
                 
                 // shoot rays in direction R/T and keep reflecting/refracting when intersecting
                 // until a diffuse surface is hit [wall, roof or floor] 

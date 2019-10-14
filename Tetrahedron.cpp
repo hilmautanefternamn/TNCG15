@@ -37,8 +37,7 @@ public:
 				tMin = t;
 				isHit = true;
 				normal = tri.getNormal();
-				Phit = tetraHit;
-
+                Phit = tetraHit;
 			}
         }
         return isHit;

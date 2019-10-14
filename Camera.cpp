@@ -51,7 +51,6 @@ public:
         Vertex Phit;
 		ColorDbl color;
 		Direction hitNormal;
-
 		Vertex PhitS;
 		
 
@@ -67,27 +66,33 @@ public:
                 Ray ray(eye1, rayD);
                 double t{};		            // distance between camera and intersection point
 
+
                 // find clostest intersecting triangle to the eye
 				s.rayIntersection(ray, t, Phit, color, hitNormal);
 				
-				Direction srayD = pointLight - Phit;
+				
 				// check if there are any objects between intersected triangle and light source 
-				Ray shadowRay(Phit, srayD);
+                Direction srayD = pointLight - Phit;
+                Ray shadowRay(Phit, srayD);
 				double st = 10000.0;	// distance between intersection point and point light
 				
 				s.shadowrayIntersection(shadowRay, st, PhitS);
                 
-             
-
 
                 // compute angle between surface normal and light direction
                 pLightDir = pointLight - Phit;
                 double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
 
+
+    //--------------------------------------//
+                
+                Vertex prevHit{ eye1 };
+        // if: tetraintersect || sphereintersect
+                
 				// to go in some recursive function somewhere
                 // emitt reflected and refracted ray from Phit with less importance than incoming ray
-                Direction I { (Phit - eye1).normalize() };      // incoming ray
-                Direction N { hitNormal };                      // normal of intersected surface
+                Direction I { (Phit - prevHit).normalize() };       // incoming ray
+                Direction N { hitNormal };                          // normal of intersected surface
                 double N_dot_I = N.dotProduct(I);
                 double n1 { 1 };     // air
                 double n2 { 1.5 };   // glass
@@ -101,16 +106,13 @@ public:
                 // until a diffuse surface is hit [wall, roof or floor] 
                 // return color of hit diffuse surface to assign to current pixel in pixel plane
 
-                // base case: intersection with diffuse surface [wall, roof or floor]
-                    // return color of surface
-                // else: keep shooting rays
+
+        // else: base case: intersection with diffuse surface [wall, roof or floor]
+                // return color of surface
 
     //--------------------------------------//
 
                 
-          
-
-
                 /*--    3 COLOR CASES   --*/
                 
                 // surface is not lit by the light source
@@ -118,7 +120,7 @@ public:
                     pixelPlane[w][h].color = black;
            
                 // there's an object bewteen intersected triangle and light source => triangle should be in shadow
-                else if ( st < pLightDir.length())
+                else if ( st < pLightDir.length() )
                     pixelPlane[w][h].color = color * 0.4;
 
                 // surface is lit & there's no object between it and the light source

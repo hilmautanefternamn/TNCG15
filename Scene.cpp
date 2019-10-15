@@ -72,8 +72,8 @@ public:
         triangles.push_back({ vertices[8], vertices[12], vertices[13], white, diffuse });
         triangles.push_back({ vertices[8], vertices[13], vertices[7], white, diffuse });
         // VB
-        triangles.push_back({ vertices[2], vertices[7], vertices[0], cyan, diffuse });
-        triangles.push_back({ vertices[2], vertices[9], vertices[7], cyan, diffuse });
+        triangles.push_back({ vertices[2], vertices[7], vertices[0], granite, diffuse });
+        triangles.push_back({ vertices[2], vertices[9], vertices[7], granite, diffuse });
         // B
         triangles.push_back({ vertices[2], vertices[10], vertices[9], yellow, diffuse });
         triangles.push_back({ vertices[2], vertices[3], vertices[10], yellow, diffuse });
@@ -99,7 +99,7 @@ public:
         tetra = { v0, v1, v2, v3, red, reflective};
 
         // Sphere
-        sph = { Vertex{ 7.0, -2.0, 0.0, 1.0 }, w, blue, reflective };
+        sph = { Vertex{ 5.0, -2.0, -1.0, 1.0 }, w, blue, reflective };
 	};
 
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
@@ -117,10 +117,11 @@ public:
 					color = tri.color;
 					normal = tri.getNormal();
 					t = tTri;
-					Phit = PhitTri;
+                    Phit = PhitTri;
 					sType = tri.sType;
 			}
 		}
+
 
         // find intersections with tetrahedron
 		double tTetra;
@@ -133,11 +134,12 @@ public:
             {
 				color = tetra.color;
 				normal = normalTetra;
-				Phit = PhitTetra;
+                Phit = PhitTetra;
 				t = tTetra;
 				sType = tetra.sType;
 			}
 		}
+
 
         // find intersections with sphere
 		double sphere_t;
@@ -148,55 +150,36 @@ public:
 			{
 				color = sph.color;
 				normal = sph.getSphereNormal(sphereHit);
-				Phit = sphereHit;
+                Phit = sphereHit;
 				t = sphere_t;
 				sType = sph.sType;
 			}
 		}
-		if (sType == reflective)
+		
+
+        // for reflective surfaces
+        if (sType == reflective)
 		{
-			//--------------------------------------//
+            // to go in some recursive function somewhere
+			// emitt reflected and refracted ray from Phit with less importance than incoming ray
+			Direction I{ (Phit-ray.start).normalize() };            // incoming ray
+			Direction N{ normal };                                  // normal of intersected surface
+			double N_dot_I = N.dotProduct(I);
+			double n1{ 1 };     // air
+			double n2{ 1.5 };   // glass
+			double n{ n1 / n2 };
+				
+            // reflected direction
+			Direction R{ ( I - N*(2 * (N_dot_I)) ).normalize() };
+			Ray reflectedRay{ Phit, R };
+				
+            rayIntersection(reflectedRay, t, Phit, color, normal);
+                          
+            // refracted direction
+			//Direction T{ (I*n + N*(-n*(N_dot_I)-sqrt(1 - n*n*(1 - N_dot_I*N_dot_I)))).normalize() };
+			//Ray refractedRay{ Phit, T };
 
-			Vertex prevHit = ray.start;
-            Phit.printVertex();
-            prevHit.printVertex();
-			// if: tetraintersect || sphereintersect
-			if (!(prevHit == Phit))
-			{
-				// to go in some recursive function somewhere
-				// emitt reflected and refracted ray from Phit with less importance than incoming ray
-				Direction I{ ray.dir.normalize() };       // incoming ray
-				Direction N{ normal };                          // normal of intersected surface
-				double N_dot_I = N.dotProduct(I);
-				double n1{ 1 };     // air
-				double n2{ 1.5 };   // glass
-				double n{ n1 / n2 };
-				// reflected direction
-				Direction R{ (I - N * 2 * (N_dot_I)).normalize() };
-				Ray reflectedRay{ Phit, R };
-
-				rayIntersection(reflectedRay, t, Phit, color, normal);
-				// refracted direction
-				//Direction T{ (I*n + N*(-n*(N_dot_I)-sqrt(1 - n*n*(1 - N_dot_I*N_dot_I)))).normalize() };
-				//Ray refractedRay{ Phit, T };
-
-				// shoot rays in direction R/T and keep reflecting/refracting when intersecting
-				// until a diffuse surface is hit [wall, roof or floor] 
-				// return color of hit diffuse surface to assign to current pixel in pixel plane
-
-
-				// else: base case: intersection with diffuse surface [wall, roof or floor]
-				// return color of surface
-
-				//--------------------------------------//
-			}
 		}
-		//calcs
-		//make new ray
-		//rayIntersection(newray,)
-		//else
-		//hm
-		//return mf color
 	};
 
     // danne deleted my comment

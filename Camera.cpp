@@ -62,8 +62,7 @@ public:
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
 
                 // find clostest intersecting triangle to the eye
-				Direction rayD = pixelPoint - eye1;
-                Ray ray(eye1, rayD);
+                Ray ray(eye1, { pixelPoint - eye1 });
                 double t{};		            // distance between camera and intersection point
 
 
@@ -72,8 +71,7 @@ public:
 				
 				
 				// check if there are any objects between intersected triangle and light source 
-                Direction srayD = pointLight - Phit;
-                Ray shadowRay(Phit, srayD);
+                Ray shadowRay(Phit, { pointLight - Phit });
 				double st = 10000.0;	// distance between intersection point and point light
 				
 				s.shadowrayIntersection(shadowRay, st, PhitS);
@@ -87,17 +85,17 @@ public:
                 /*--    3 COLOR CASES   --*/
                 
                 // surface is not lit by the light source
-                if ( abs(angle) > (PI / 2) )
+                if (abs(angle) > (PI / 2))
                     pixelPlane[w][h].color = black;
-           
+
                 // there's an object bewteen intersected triangle and light source => triangle should be in shadow
-                else if ( st < pLightDir.length() )
+                else if (st < pLightDir.length())
                     pixelPlane[w][h].color = color * 0.4;
 
                 // surface is lit & there's no object between it and the light source
                 else
                     pixelPlane[w][h].color = (color*std::abs(cos(angle)));
-
+                    //pixelPlane[w][h].color = color;
                 /*------------------------*/
 
                 // write color to output file

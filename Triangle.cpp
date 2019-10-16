@@ -28,7 +28,7 @@ public:
     };
 
     //computes the intersection between a Ray and the Triangle with the Möller - Trumbore algorithm
-    bool rayIntersection(const Ray &ray, double &t, Vertex &Phit)
+    bool rayIntersection(Ray &ray, double &t, Vertex &Phit)
     {
         Direction T{ ray.start - v0 };
         Direction E1{ v1 - v0 };

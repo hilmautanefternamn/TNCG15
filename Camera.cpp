@@ -61,7 +61,7 @@ public:
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
 
                 // find clostest intersecting triangle to the eye
-                Ray ray(eye1, { pixelPoint - eye1 });
+                Ray ray(eye1, { (pixelPoint - eye1).normalize() });
                 double t{};		            // distance between camera and intersection point
 
                 int depth{0};

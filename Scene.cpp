@@ -207,13 +207,14 @@ public:
 
             // rotate incoming direction with random angles to get outgoing direction
             glm::vec4 rotZ = glm::rotate(I, (float)phi, Z);
-            glm::vec4 rotY = glm::normalize( glm::rotate(I, (float)theta, Y) );
+            glm::vec4 rotY = glm::normalize( glm::rotate(rotZ, (float)theta, Y) );
             
             Direction outDir{ rotY.x, rotY.y, rotY.z };
+			//outDir = (outDir-(outDir+i)).normalize();
             Ray out{ Phit,  outDir};
 
             // shoot ray to get color of close area
-            if (depth < 5)
+            if (depth < 3)
             {
                 depth++;
                 rayIntersection(out, t, Phit, color, normal, depth);

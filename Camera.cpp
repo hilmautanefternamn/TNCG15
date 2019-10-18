@@ -9,7 +9,6 @@
 #include <fstream>
 #include <cmath>
 
-const double PI = 3.14159265359;
 
 /* Camera contains two instances of Vertex (the eye points) and a variable that
 allows you to switch between both eye points.
@@ -65,9 +64,9 @@ public:
                 Ray ray(eye1, { pixelPoint - eye1 });
                 double t{};		            // distance between camera and intersection point
 
-
+                int depth{0};
                 // find clostest intersecting triangle to the eye
-				s.rayIntersection(ray, t, Phit, color, hitNormal);
+                s.rayIntersection(ray, t, Phit, color, hitNormal, depth);
 				
 				
 				// check if there are any objects between intersected triangle and light source 

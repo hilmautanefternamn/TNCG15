@@ -4,7 +4,11 @@
 #include "Tetrahedron.cpp"
 #include "Sphere.cpp"
 #include <vector>
+#include <cmath>
 #include "glm/glm.hpp"
+#include "glm/gtx/rotate_vector.hpp"
+
+const double PI = 3.14159265359;
 
 /*Scene contains instances of Triangle. We use one Scene object that
 consists of 24 instances of Triangle. Scene objects are closed.
@@ -104,7 +108,7 @@ public:
 	};
 
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
-	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal)
+	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal, int depth)
 	{
         surfaceType sType = diffuse;
         
@@ -169,33 +173,51 @@ public:
 			Direction R{ ( I - N*(2 * (N_dot_I)) ).normalize() };
 			Ray reflectedRay{ Phit, R };
 				
-            rayIntersection(reflectedRay, t, Phit, color, normal);
+            rayIntersection(reflectedRay, t, Phit, color, normal, depth);
                           
             // refracted direction
-            //double n1{ 1 };     // air
-            //double n2{ 1.5 };   // glass
-            //double n{ n1 / n2 };
-			//Direction T{ (I*n + N*(-n*(N_dot_I)-sqrt(1 - n*n*(1 - N_dot_I*N_dot_I)))).normalize() };
-			//Ray refractedRay{ Phit, T };
-
+            /*double n1{ 1 };     // air
+            double n2{ 1.5 };   // glass
+            double n{ n1 / n2 };
+			Direction T{ (I*n + N*(-n*(N_dot_I)-sqrt(1 - n*n*(1 - N_dot_I*N_dot_I)))).normalize() };
+			Ray refractedRay{ Phit, T };*/
 		}
+
         // Monte Carlo for diffuse surfaces
         else
         {
             // create local coordinate system around intersection point Phit
-            Direction I{ ray.dir.normalize() };          // incoming ray
-            Direction Z{ normal };                                  // Z = normal of Phit
-            Direction X{ ( Z*(I.dotProduct(Z)) ).normalize() };     // X = projection of incoming ray onto Z
-            Direction Y{ X.crossProduct(Z).normalize() };           // Y = X.crossProduct(Z);
+            Direction i{ ray.dir.normalize() };                         // incoming ray in Global Coordinates
+            Direction z{ normal };                                      // Z = normal of Phit                                          
+            Direction x{ (i - z * (z.dotProduct(i))).normalize() };     // X = part of incoming ray orthogonal to Z
+            Direction y{ (x*-1).crossProduct(z).normalize() };          // Y = X.crossProduct(Z);
 
-            // transform into local coordinate system
-            glm::mat4 M;
+            // transfer coordinate system to glm vectors
+            glm::vec4 I(i.x, i.y, i.z, 1.0f);                           // incoming in global coords
+            glm::vec3 X(x.x, x.y, x.z);                                 // X-axis
+            glm::vec3 Y(y.x, y.y, y.z);                                 // Y-axis
+            glm::vec3 Z(z.x, z.y, z.z);                                 // Z-axis
 
             // generate random azimuth and inclination angle
+            double _x = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
+            double _y = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
+            
+            double theta{ asin( sqrt(_y) ) };
+            double phi{ 2* PI *_x };
 
             // rotate incoming direction with random angles to get outgoing direction
+            glm::vec4 rotZ = glm::rotate(I, (float)phi, Z);
+            glm::vec4 rotY = glm::normalize( glm::rotate(I, (float)theta, Y) );
+            
+            Direction outDir{ rotY.x, rotY.y, rotY.z };
+            Ray out{ Phit,  outDir};
 
             // shoot ray to get color of close area
+            if (depth < 5)
+            {
+                depth++;
+                rayIntersection(out, t, Phit, color, normal, depth);
+            }
         }
 	};
 

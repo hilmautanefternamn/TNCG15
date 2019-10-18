@@ -22,10 +22,7 @@ public:
     // constructor to create triangle from 3 vertices and a color
     Triangle(Vertex inv0, Vertex inv1, Vertex inv2, ColorDbl c, surfaceType sType)
         :v0{ inv0 }, v1{ inv1 }, v2{ inv2 }, color{ c }, sType(sType)
-    {
-        normal = { this->getNormal() };
-        normal.printDirection();
-    };
+    { normal = { this->getNormal() }; };
 
     //computes the intersection between a Ray and the Triangle with the Möller - Trumbore algorithm
     bool rayIntersection(Ray &ray, double &t, Vertex &Phit)

@@ -105,10 +105,11 @@ public:
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
 	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal)
 	{
+        surfaceType sType = diffuse;
+        
         // find intersections with scene walls, roof and floor
 		double tTri;
 		Vertex PhitTri;
-		surfaceType sType = diffuse;
 
 		for (auto &tri : triangles)
 		{
@@ -122,12 +123,11 @@ public:
 			}
 		}
 
-
         // find intersections with tetrahedron
 		double tTetra;
 		Vertex PhitTetra;
 		Direction normalTetra;
-
+        
 		if(tetra.rayIntersection(ray, tTetra, PhitTetra, normalTetra))
 		{
 			if (tTetra < t)
@@ -139,7 +139,6 @@ public:
 				sType = tetra.sType;
 			}
 		}
-
 
         // find intersections with sphere
 		double sphere_t;
@@ -165,9 +164,6 @@ public:
 			Direction I{ (Phit-ray.start).normalize() };            // incoming ray
 			Direction N{ normal };                                  // normal of intersected surface
 			double N_dot_I = N.dotProduct(I);
-			double n1{ 1 };     // air
-			double n2{ 1.5 };   // glass
-			double n{ n1 / n2 };
 				
             // reflected direction
 			Direction R{ ( I - N*(2 * (N_dot_I)) ).normalize() };
@@ -176,6 +172,9 @@ public:
             rayIntersection(reflectedRay, t, Phit, color, normal);
                           
             // refracted direction
+            //double n1{ 1 };     // air
+            //double n2{ 1.5 };   // glass
+            //double n{ n1 / n2 };
 			//Direction T{ (I*n + N*(-n*(N_dot_I)-sqrt(1 - n*n*(1 - N_dot_I*N_dot_I)))).normalize() };
 			//Ray refractedRay{ Phit, T };
 

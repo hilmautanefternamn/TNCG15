@@ -29,13 +29,16 @@ public:
     {
 		Vertex tetraHit;
 		double tMin = 10000.0;
+        double tTri;
         bool isHit = false;
+
         for (auto &tri : trianglesTetra)
         {
-			if (tri.rayIntersection(ray, t, tetraHit) && t < tMin) 
+			if (tri.rayIntersection(ray, tTri, tetraHit) && tTri < tMin) 
 			{
-				tMin = t;
 				isHit = true;
+                tMin = tTri;
+                t = tTri;
 				normal = tri.getNormal();
                 Phit = tetraHit;
 			}

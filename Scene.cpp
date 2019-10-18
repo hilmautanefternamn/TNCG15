@@ -4,6 +4,7 @@
 #include "Tetrahedron.cpp"
 #include "Sphere.cpp"
 #include <vector>
+#include "glm/glm.hpp"
 
 /*Scene contains instances of Triangle. We use one Scene object that
 consists of 24 instances of Triangle. Scene objects are closed.
@@ -91,15 +92,15 @@ public:
         triangles.push_back({ vertices[0], vertices[7], vertices[13], red, diffuse });
 
         // Tetrahedron
-        Vertex v0{ 8.0, 2.0, 0.0, w };
-        Vertex v1{ 10.6, 0.5, 0.0, w };
-        Vertex v2 { 10.6, 3.5, 0.0, w };
-        Vertex v3 { 9.3, 2.0, 2.6, w };
+        Vertex v0 { 5.0, 2.0, 0.0, w };
+        Vertex v1 { 7.6, 0.5, 0.0, w };
+        Vertex v2 { 7.6, 3.5, 0.0, w };
+        Vertex v3 { 6.3, 2.0, 2.6, w };
 
         tetra = { v0, v1, v2, v3, red, reflective};
 
         // Sphere
-        sph = { Vertex{ 5.0, -2.0, -1.0, 1.0 }, w, blue, reflective };
+        sph = { Vertex{ 7.0, -2.0, 3.0, 1.0 }, w, blue, reflective };
 	};
 
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
@@ -156,12 +157,11 @@ public:
 		}
 		
 
-        // for reflective surfaces
+        // Perfect reflections for reflective surfaces
         if (sType == reflective)
 		{
-            // to go in some recursive function somewhere
 			// emitt reflected and refracted ray from Phit with less importance than incoming ray
-			Direction I{ (Phit-ray.start).normalize() };            // incoming ray
+			Direction I{ ray.dir.normalize() };            // incoming ray
 			Direction N{ normal };                                  // normal of intersected surface
 			double N_dot_I = N.dotProduct(I);
 				
@@ -179,6 +179,24 @@ public:
 			//Ray refractedRay{ Phit, T };
 
 		}
+        // Monte Carlo for diffuse surfaces
+        else
+        {
+            // create local coordinate system around intersection point Phit
+            Direction I{ ray.dir.normalize() };          // incoming ray
+            Direction Z{ normal };                                  // Z = normal of Phit
+            Direction X{ ( Z*(I.dotProduct(Z)) ).normalize() };     // X = projection of incoming ray onto Z
+            Direction Y{ X.crossProduct(Z).normalize() };           // Y = X.crossProduct(Z);
+
+            // transform into local coordinate system
+            glm::mat4 M;
+
+            // generate random azimuth and inclination angle
+
+            // rotate incoming direction with random angles to get outgoing direction
+
+            // shoot ray to get color of close area
+        }
 	};
 
     // danne deleted my comment

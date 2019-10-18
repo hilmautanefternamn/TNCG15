@@ -37,7 +37,7 @@ public:
 
     Direction getSphereNormal(Vertex &Phit)
     {
-        return Direction( (Phit-center)/radius );
+        return Direction( (Phit-center).normalize() );
     }
 
     Vertex center;

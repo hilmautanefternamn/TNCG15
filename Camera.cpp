@@ -56,6 +56,15 @@ public:
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
         {
+			if (h == 200)
+				cout << "25%" << endl;
+			if (h == 400)
+				cout << "50%" << endl;
+			if (h == 600)
+				cout << "75%" << endl;
+			if (h == 799)
+				cout << "100%" << endl;
+
             for (int w = size - 1; w >= 0; w--)   // y
             {
                 pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);

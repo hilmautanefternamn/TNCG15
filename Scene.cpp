@@ -104,7 +104,7 @@ public:
         tetra = { v0, v1, v2, v3, red, reflective};
 
         // Sphere
-        sph = { Vertex{ 7.0, -2.0, 3.0, 1.0 }, w, blue, reflective };
+        sph = { Vertex{ 5.0, -2.0, 0.0, 1.0 }, w, blue, reflective };
 	};
 
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
@@ -186,39 +186,43 @@ public:
         // Monte Carlo for diffuse surfaces
         else
         {
-            // create local coordinate system around intersection point Phit
-            Direction i{ ray.dir.normalize() };                         // incoming ray in Global Coordinates
-            Direction z{ normal };                                      // Z = normal of Phit                                          
-            Direction x{ (i - z * (z.dotProduct(i))).normalize() };     // X = part of incoming ray orthogonal to Z
-            Direction y{ (x*-1).crossProduct(z).normalize() };          // Y = X.crossProduct(Z);
+			Ray ray1 = ray;
+			double t1 = t;
+			Vertex Phit1 = Phit;
+			ColorDbl color1 = color;
+			Direction normal1 = normal;
+			int depth1 = depth;
 
-            // transfer coordinate system to glm vectors
-            glm::vec4 I(i.x, i.y, i.z, 1.0f);                           // incoming in global coords
-            glm::vec3 X(x.x, x.y, x.z);                                 // X-axis
-            glm::vec3 Y(y.x, y.y, y.z);                                 // Y-axis
-            glm::vec3 Z(z.x, z.y, z.z);                                 // Z-axis
+			Ray ray2 = ray;
+			double t2 = t;
+			Vertex Phit2 = Phit;
+			ColorDbl color2 = color;
+			Direction normal2 = normal;
+			int depth2 = depth;
 
-            // generate random azimuth and inclination angle
-            double _x = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
-            double _y = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
-            
-            double theta{ asin( sqrt(_y) ) };
-            double phi{ 2* PI *_x };
+			Ray ray3 = ray;
+			double t3 = t;
+			Vertex Phit3 = Phit;
+			ColorDbl color3 = color;
+			Direction normal3 = normal;
+			int depth3 = depth;
 
-            // rotate incoming direction with random angles to get outgoing direction
-            glm::vec4 rotZ = glm::rotate(I, (float)phi, Z);
-            glm::vec4 rotY = glm::normalize( glm::rotate(rotZ, (float)theta, Y) );
-            
-            Direction outDir{ rotY.x, rotY.y, rotY.z };
-			//outDir = (outDir-(outDir+i)).normalize();
-            Ray out{ Phit,  outDir};
+			Ray ray4 = ray;
+			double t4 = t;
+			Vertex Phit4 = Phit;
+			ColorDbl color4 = color;
+			Direction normal4 = normal;
+			int depth4 = depth;
+			
+			//4 50min rendering, 3 15min rendering
+			diffuseReflector(ray1, t1, Phit1, color1, normal1, depth1);
+			diffuseReflector(ray2, t2, Phit2, color2, normal2, depth2);
+			diffuseReflector(ray3, t3, Phit3, color3, normal3, depth3);
+			//diffuseReflector(ray4, t4, Phit4, color4, normal4, depth4);
 
-            // shoot ray to get color of close area
-            if (depth < 3)
-            {
-                depth++;
-                rayIntersection(out, t, Phit, color, normal, depth);
-            }
+			color = (color1 + color2 + color3) / 3.0;
+			color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
+		
         }
 	};
 
@@ -247,6 +251,44 @@ public:
 				Phit = sphereHit;
 				t = sphere_t;
 			}
+		}
+	};
+
+	void diffuseReflector(Ray &ray, double &t,Vertex &Phit, ColorDbl &color, Direction &normal,int &depth)
+	{
+		// create local coordinate system around intersection point Phit
+		Direction i{ ray.dir.normalize() };                         // incoming ray in Global Coordinates
+		Direction z{ normal };                                      // Z = normal of Phit                                          
+		Direction x{ (i - z * (z.dotProduct(i))).normalize() };     // X = part of incoming ray orthogonal to Z
+		Direction y{ (x*-1).crossProduct(z).normalize() };          // Y = X.crossProduct(Z);
+
+																	// transfer coordinate system to glm vectors
+		glm::vec4 I(i.x, i.y, i.z, 1.0f);                           // incoming in global coords
+		glm::vec3 X(x.x, x.y, x.z);                                 // X-axis
+		glm::vec3 Y(y.x, y.y, y.z);                                 // Y-axis
+		glm::vec3 Z(z.x, z.y, z.z);                                 // Z-axis
+
+																	// generate random azimuth and inclination angle
+		double _x = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
+		double _y = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
+
+		double theta{ asin(sqrt(_y)) };
+		double phi{ 2 * PI *_x };
+
+		// rotate incoming direction with random angles to get outgoing direction
+		glm::vec4 rotZ = glm::rotate(I, (float)phi, Z);
+		glm::vec4 rotY = glm::normalize(glm::rotate(rotZ, (float)theta, Y));
+
+		Direction outDir{ rotY.x, rotY.y, rotY.z };
+		outDir = (outDir + Direction(Phit.x, Phit.y, Phit.z) - Direction(Phit.x, Phit.y, Phit.z)).normalize();
+
+		Ray out{ Phit,  outDir };
+
+		// shoot ray to get color of close area
+		if (depth < 3)
+		{
+			depth++;
+			rayIntersection(out, t, Phit, color, normal, depth);
 		}
 	};
 

@@ -43,6 +43,7 @@ public:
         
         // to the pixel plane
 		Vertex pixelPoint;
+		
         double lengthP{ 0.0025 };
         double hlengthP{ lengthP / 2.0 };
 		
@@ -52,6 +53,10 @@ public:
 		Direction hitNormal;
 		Vertex PhitS;
 		
+		ColorDbl colorUL;
+		ColorDbl colorUR;
+		ColorDbl colorLL;
+		ColorDbl colorLR;
 
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
@@ -65,21 +70,49 @@ public:
 			if (h == 799)
 				cout << "100%" << endl;
 
-            for (int w = size - 1; w >= 0; w--)   // y
+            for (int w = 0; w < size; w++)   // y
             {
-                pixelPoint = Vertex(0.0, hlengthP + (w*lengthP) - 1.0, 1.0 - hlengthP - (h*lengthP), 1.0);
+				pixelPoint = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), 1.0 - hlengthP - (h*lengthP), 1.0);
+				//double randlengthP = ((rand() % 100 + 1) / 100.0)/800.0;     // random double between 0 and 1
+				//double randheightP = ((rand() % 100 + 1) / 100.0)/800.0;
+				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
+				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
+				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
+				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
+
+				//cout << "original"; pixelPoint.printVertex();
+				//cout << "UL"; pixelPointUL.printVertex();
+				//cout << "UR"; pixelPointUR.printVertex();
+				//cout << "LL"; pixelPointLL.printVertex();
+				//cout << "LR"; pixelPointLR.printVertex();
+
 
                 // find clostest intersecting triangle to the eye
                 Ray ray(eye1, { (pixelPoint - eye1).normalize() });
+
+				Ray rayUL(eye1, { (pixelPointUR - eye1).normalize() });
+				Ray rayUR(eye1, { (pixelPointUL - eye1).normalize() });
+				Ray rayLL(eye1, { (pixelPointLL - eye1).normalize() });
+				Ray rayLR(eye1, { (pixelPointLR - eye1).normalize() });
                 double t{};		            // distance between camera and intersection point
 
-                int depth{0};
+                
                 // find clostest intersecting triangle to the eye
-                s.rayIntersection(ray, t, Phit, color, hitNormal, depth);
+				double tUL, tUR, tLL, tLR;
+				Vertex PhitUL, PhitUR, PhitLL, PhitLR;
+				Direction hitNormalUL, hitNormalUR, hitNormalLL, hitNormalLR;
+
+                s.rayIntersection(rayUL, tUL, PhitUL, colorUL, hitNormalUL, 0);
+				s.rayIntersection(rayUR, tUR, PhitUR, colorUR, hitNormalUR, 0);
+				s.rayIntersection(rayLL, tLL, PhitLL, colorLL, hitNormalLL, 0);
+				s.rayIntersection(rayLR, tLR, PhitLR, colorLR, hitNormalLR, 0);
 				
-				
+				color = (colorUL + colorUR + colorLL + colorLR) / 4.0;
+				//cout << color.red << " " << color.green << " " << color.blue << endl;
+				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
+				//cout << color.red << " " << color.green << " " << color.blue << endl;
 				// check if there are any objects between intersected triangle and light source 
-                Ray shadowRay(Phit, { pointLight - Phit });
+                /*Ray shadowRay(Phit, { pointLight - Phit });
 				double st = 10000.0;	// distance between intersection point and point light
 				
 				s.shadowrayIntersection(shadowRay, st, PhitS);
@@ -87,12 +120,12 @@ public:
 
                 // compute angle between surface normal and light direction
                 pLightDir = pointLight - Phit;
-                double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };
+                double angle{ acos((pLightDir.normalize()).dotProduct(hitNormal)) };*/
 
                 
                 /*--    3 COLOR CASES   --*/
                 
-                // surface is not lit by the light source
+              /*  // surface is not lit by the light source
                 if (abs(angle) > (PI / 2))
                     pixelPlane[w][h].color = black;
 
@@ -102,10 +135,10 @@ public:
 
                 // surface is lit & there's no object between it and the light source
                 else
-                    pixelPlane[w][h].color = (color*std::abs(cos(angle)));
-                    //pixelPlane[w][h].color = color;
+                    pixelPlane[w][h].color = (color*std::abs(cos(angle)));*/
+                    //
                 /*------------------------*/
-
+				pixelPlane[w][h].color = color;
                 // write color to output file
 				out << pixelPlane[w][h].color;
             }

@@ -110,6 +110,7 @@ public:
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
 	void rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal, int depth)
 	{
+		Vertex pointLight{ 5.0, 0.0, 4.9, 1.0 };
         surfaceType sType = diffuse;
         
         // find intersections with scene walls, roof and floor
@@ -159,6 +160,15 @@ public:
 				sType = sph.sType;
 			}
 		}
+
+		Ray shadowRay(Phit, { pointLight - Phit });
+		double st = 10000.0;	// distance between intersection point and point light
+		Vertex PhitS;
+		shadowrayIntersection(shadowRay, st, PhitS);
+		Direction pLightDir = pointLight - Phit;
+
+		// compute angle between surface normal and light direction
+		
 		
 
         // Perfect reflections for reflective surfaces
@@ -193,7 +203,7 @@ public:
 			Direction normal1 = normal;
 			int depth1 = depth;
 
-			Ray ray2 = ray;
+			/*Ray ray2 = ray;
 			double t2 = t;
 			Vertex Phit2 = Phit;
 			ColorDbl color2 = color;
@@ -212,18 +222,44 @@ public:
 			Vertex Phit4 = Phit;
 			ColorDbl color4 = color;
 			Direction normal4 = normal;
-			int depth4 = depth;
+			int depth4 = depth;*/
 			
 			//4 50min rendering, 3 15min rendering
 			diffuseReflector(ray1, t1, Phit1, color1, normal1, depth1);
-			diffuseReflector(ray2, t2, Phit2, color2, normal2, depth2);
-			diffuseReflector(ray3, t3, Phit3, color3, normal3, depth3);
+			//diffuseReflector(ray2, t2, Phit2, color2, normal2, depth2);
+			//diffuseReflector(ray3, t3, Phit3, color3, normal3, depth3);
 			//diffuseReflector(ray4, t4, Phit4, color4, normal4, depth4);
+			// surface is not lit by the light source
 
-			color = (color1 + color2 + color3) / 3.0;
-			color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
+			pLightDir = pointLight - Phit1;
+			double angle{ acos((pLightDir.normalize()).dotProduct(normal1)) };
+			if (abs(angle) > (PI / 2))
+			{
+				color = ColorDbl(0.0, 0.0, 0.0);
+			}
+			else
+			{
+				color = (color1*std::abs(cos(angle)));
+			}
+			//color = color1;
+			//color = (color1 + color2 + color3) / 3.0;
+			//color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
 		
         }
+
+		/*--    3 COLOR CASES   --*/
+
+	
+		// there's an object bewteen intersected triangle and light source => triangle should be in shadow
+		if (st < pLightDir.length())
+		{
+			color = color * 0.4;
+		}
+		// surface is lit & there's no object between it and the light source
+		
+
+		//cout << color.red << " " << color.green << " " << color.blue << endl;
+
 	};
 
     // danne deleted my comment
@@ -285,7 +321,7 @@ public:
 		Ray out{ Phit,  outDir };
 
 		// shoot ray to get color of close area
-		if (depth < 3)
+		if (depth < 5)
 		{
 			depth++;
 			rayIntersection(out, t, Phit, color, normal, depth);

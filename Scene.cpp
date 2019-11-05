@@ -105,6 +105,7 @@ public:
 
         // Sphere
         sph = { Vertex{ 5.0, -2.0, 0.0, 1.0 }, w, blue, reflective };
+		//sph2 = { Vertex{ 3, 0, -2.0, 1.0 }, 0.5, red, diffuse };
 	};
 
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
@@ -160,6 +161,19 @@ public:
 				sType = sph.sType;
 			}
 		}
+		/*double sphere_t2;
+		Vertex sphereHit2;
+		if (sph2.sphereIntersect(ray, sphere_t2, sphereHit2))
+		{
+			if (sphere_t2 < t)
+			{
+				color = sph2.color;
+				normal = sph2.getSphereNormal(sphereHit2);
+				Phit = sphereHit2;
+				t = sphere_t2;
+				sType = sph2.sType;
+			}
+		}*/
 
 		Ray shadowRay(Phit, { pointLight - Phit });
 		double st = 10000.0;	// distance between intersection point and point light
@@ -203,48 +217,20 @@ public:
 			Direction normal1 = normal;
 			int depth1 = depth;
 
-			/*Ray ray2 = ray;
-			double t2 = t;
-			Vertex Phit2 = Phit;
-			ColorDbl color2 = color;
-			Direction normal2 = normal;
-			int depth2 = depth;
-
-			Ray ray3 = ray;
-			double t3 = t;
-			Vertex Phit3 = Phit;
-			ColorDbl color3 = color;
-			Direction normal3 = normal;
-			int depth3 = depth;
-
-			Ray ray4 = ray;
-			double t4 = t;
-			Vertex Phit4 = Phit;
-			ColorDbl color4 = color;
-			Direction normal4 = normal;
-			int depth4 = depth;*/
-			
-			//4 50min rendering, 3 15min rendering
 			diffuseReflector(ray1, t1, Phit1, color1, normal1, depth1);
-			//diffuseReflector(ray2, t2, Phit2, color2, normal2, depth2);
-			//diffuseReflector(ray3, t3, Phit3, color3, normal3, depth3);
-			//diffuseReflector(ray4, t4, Phit4, color4, normal4, depth4);
+		
 			// surface is not lit by the light source
 
 			pLightDir = pointLight - Phit1;
 			double angle{ acos((pLightDir.normalize()).dotProduct(normal1)) };
 			if (abs(angle) > (PI / 2))
 			{
-				color = ColorDbl(0.0, 0.0, 0.0);
+				//color = ColorDbl(0.0, 0.0, 0.0);
 			}
 			else
 			{
 				color = (color1*std::abs(cos(angle)));
 			}
-			//color = color1;
-			//color = (color1 + color2 + color3) / 3.0;
-			//color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
-		
         }
 
 		/*--    3 COLOR CASES   --*/
@@ -288,6 +274,16 @@ public:
 				t = sphere_t;
 			}
 		}
+		double sphere_t2;
+		Vertex sphereHit2;
+		if (sph2.sphereIntersect(ray, sphere_t2, sphereHit2))
+		{
+			if (sphere_t2 < t)
+			{
+				Phit = sphereHit2;
+				t = sphere_t2;
+			}
+		}
 	};
 
 	void diffuseReflector(Ray &ray, double &t,Vertex &Phit, ColorDbl &color, Direction &normal,int &depth)
@@ -316,12 +312,12 @@ public:
 		glm::vec4 rotY = glm::normalize(glm::rotate(rotZ, (float)theta, Y));
 
 		Direction outDir{ rotY.x, rotY.y, rotY.z };
-		outDir = (outDir + Direction(Phit.x, Phit.y, Phit.z) - Direction(Phit.x, Phit.y, Phit.z)).normalize();
+		//outDir = (outDir + Direction(Phit.x, Phit.y, Phit.z) - Direction(Phit.x, Phit.y, Phit.z)).normalize();
 
 		Ray out{ Phit,  outDir };
 
 		// shoot ray to get color of close area
-		if (depth < 5)
+		if (depth < 3)
 		{
 			depth++;
 			rayIntersection(out, t, Phit, color, normal, depth);
@@ -333,6 +329,7 @@ public:
 	Vertex vertices[14];
 
     Sphere sph;
+	Sphere sph2;
     Tetrahedron tetra;
 
 private:

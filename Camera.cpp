@@ -33,7 +33,7 @@ public:
     {
         ColorDbl black{ 0.0, 0.0, 0.0 };
 
-        Vertex pointLight{ 5.0, 0.0, 4.9, 1.0 };
+        Vertex pointLight{ 5.0, 0.0, 5.0, 1.0 };
 		Direction pLightDir;
 
         // create output file
@@ -53,10 +53,7 @@ public:
 		Direction hitNormal;
 		Vertex PhitS;
 		
-		ColorDbl colorUL;
-		ColorDbl colorUR;
-		ColorDbl colorLL;
-		ColorDbl colorLR;
+		
 
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
@@ -75,23 +72,15 @@ public:
 				pixelPoint = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), 1.0 - hlengthP - (h*lengthP), 1.0);
 				//double randlengthP = ((rand() % 100 + 1) / 100.0)/800.0;     // random double between 0 and 1
 				//double randheightP = ((rand() % 100 + 1) / 100.0)/800.0;
-				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
+				//4 rays per pixel
+				/*Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
 				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
 				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
 				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
+				 Ray ray(eye1, { (pixelPoint - eye1).normalize() });
 
-				//cout << "original"; pixelPoint.printVertex();
-				//cout << "UL"; pixelPointUL.printVertex();
-				//cout << "UR"; pixelPointUR.printVertex();
-				//cout << "LL"; pixelPointLL.printVertex();
-				//cout << "LR"; pixelPointLR.printVertex();
-
-
-                // find clostest intersecting triangle to the eye
-                Ray ray(eye1, { (pixelPoint - eye1).normalize() });
-
-				Ray rayUL(eye1, { (pixelPointUR - eye1).normalize() });
-				Ray rayUR(eye1, { (pixelPointUL - eye1).normalize() });
+				Ray rayUL(eye1, { (pixelPointUL - eye1).normalize() });
+				Ray rayUR(eye1, { (pixelPointUR - eye1).normalize() });
 				Ray rayLL(eye1, { (pixelPointLL - eye1).normalize() });
 				Ray rayLR(eye1, { (pixelPointLR - eye1).normalize() });
                 double t{};		            // distance between camera and intersection point
@@ -108,7 +97,68 @@ public:
 				s.rayIntersection(rayLR, tLR, PhitLR, colorLR, hitNormalLR, 0);
 				
 				color = (colorUL + colorUR + colorLL + colorLR) / 4.0;
-				//cout << color.red << " " << color.green << " " << color.blue << endl;
+		
+				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
+				*/
+
+				//9 rays per pixel
+				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
+				Vertex pixelPointUM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
+				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
+
+				Vertex pixelPointML = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0 - hlengthP - (h*lengthP), 1.0);
+				Vertex pixelPointMM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), 1.0 - hlengthP - (h*lengthP), 1.0);
+				Vertex pixelPointMR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0 - hlengthP - (h*lengthP), 1.0);
+
+				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0);
+				Vertex pixelPointLM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0);
+				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0);
+				//cout << "original"; pixelPoint.printVertex();
+				//cout << "UL"; pixelPointUL.printVertex();
+				//cout << "UR"; pixelPointUR.printVertex();
+				//cout << "LL"; pixelPointLL.printVertex();
+				//cout << "LR"; pixelPointLR.printVertex();
+
+
+                // find clostest intersecting triangle to the eye
+                Ray ray(eye1, { (pixelPoint - eye1).normalize() });
+
+				Ray rayUL(eye1, { (pixelPointUL - eye1).normalize() });
+				Ray rayUM(eye1, { (pixelPointUM - eye1).normalize() });
+				Ray rayUR(eye1, { (pixelPointUR - eye1).normalize() });
+
+				Ray rayML(eye1, { (pixelPointML - eye1).normalize() });
+				Ray rayMM(eye1, { (pixelPointMM - eye1).normalize() });
+				Ray rayMR(eye1, { (pixelPointMR - eye1).normalize() });
+
+				Ray rayLL(eye1, { (pixelPointLL - eye1).normalize() });
+				Ray rayLM(eye1, { (pixelPointLM - eye1).normalize() });
+				Ray rayLR(eye1, { (pixelPointLR - eye1).normalize() });
+	
+                double t{};		            // distance between camera and intersection point
+
+                
+                // find clostest intersecting triangle to the eye
+				double tUL, tUM, tUR, tML,tMM,tMR,tLL,tLM,tLR;
+				Vertex PhitUL, PhitUM, PhitUR, PhitML, PhitMM, PhitMR, PhitLL, PhitLM, PhitLR;
+				Direction hitNormalUL, hitNormalUM, hitNormalUR, hitNormalML, hitNormalMM, hitNormalMR, hitNormalLL, hitNormalLM, hitNormalLR;
+				ColorDbl colorUL, colorUM, colorUR, colorML, colorMM, colorMR, colorLL, colorLM, colorLR;
+
+                s.rayIntersection(rayUL, tUL, PhitUL, colorUL, hitNormalUL, 0);
+				s.rayIntersection(rayUM, tUM, PhitUM, colorUM, hitNormalUM, 0);
+				s.rayIntersection(rayUR, tUR, PhitUR, colorUR, hitNormalUR, 0);
+
+				s.rayIntersection(rayML, tML, PhitML, colorML, hitNormalML, 0);
+				s.rayIntersection(rayMM, tMM, PhitMM, colorMM, hitNormalMM, 0);
+				s.rayIntersection(rayMR, tMR, PhitMR, colorMR, hitNormalMR, 0);
+
+				s.rayIntersection(rayLL, tLL, PhitLL, colorLL, hitNormalLL, 0);
+				s.rayIntersection(rayLM, tLM, PhitLM, colorLM, hitNormalLM, 0);
+				s.rayIntersection(rayLR, tLR, PhitLR, colorLR, hitNormalLR, 0);
+			
+				
+				color = (colorUL + colorUM + colorUR + colorML+ colorMM + colorMR + colorLL + colorLM + colorLR) / 9.0;
+		
 				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
 				//cout << color.red << " " << color.green << " " << color.blue << endl;
 				// check if there are any objects between intersected triangle and light source 

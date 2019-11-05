@@ -239,7 +239,7 @@ public:
 		// there's an object bewteen intersected triangle and light source => triangle should be in shadow
 		if (st < pLightDir.length())
 		{
-			color = color * 0.4;
+			color = color * 0.9;
 		}
 		// surface is lit & there's no object between it and the light source
 		

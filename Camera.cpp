@@ -19,9 +19,12 @@ pixel is computed according to what we learnt in lectures 4 and 5.
 Initially and to test your code you follow the ray until it hits the first
 triangle and assign the triangle color to the ray. */
 
+
+
 class Camera
 {
 public:
+	
     // default constructor
     Camera()
         : pixelPlane{ 800, std::vector<Pixel>(800) } {};
@@ -37,7 +40,7 @@ public:
 		Direction pLightDir;
 
         // create output file
-        int size{ 800 };
+		int size{ 800 };
 		std::ofstream out("out.ppm");
 		out << "P3\n" << size << ' ' << size << ' ' << "255\n";
         
@@ -58,13 +61,13 @@ public:
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
         {
-			if (h == 200)
+			if (h == size*0.25)
 				cout << "25%" << endl;
-			if (h == 400)
+			if (h == size*0.5)
 				cout << "50%" << endl;
-			if (h == 600)
+			if (h == size*0.75)
 				cout << "75%" << endl;
-			if (h == 799)
+			if (h == size-1)
 				cout << "100%" << endl;
 
             for (int w = 0; w < size; w++)   // y
@@ -73,10 +76,12 @@ public:
 				//double randlengthP = ((rand() % 100 + 1) / 100.0)/800.0;     // random double between 0 and 1
 				//double randheightP = ((rand() % 100 + 1) / 100.0)/800.0;
 				//4 rays per pixel
-				/*Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
-				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
-				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
-				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0), 1.0);
+				double sizefactor = 800.0;
+				
+				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
+				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
+				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
+				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
 				 Ray ray(eye1, { (pixelPoint - eye1).normalize() });
 
 				Ray rayUL(eye1, { (pixelPointUL - eye1).normalize() });
@@ -90,19 +95,20 @@ public:
 				double tUL, tUR, tLL, tLR;
 				Vertex PhitUL, PhitUR, PhitLL, PhitLR;
 				Direction hitNormalUL, hitNormalUR, hitNormalLL, hitNormalLR;
+				ColorDbl colorUL, colorUR, colorLL, colorLR;
 
-                s.rayIntersection(rayUL, tUL, PhitUL, colorUL, hitNormalUL, 0);
-				s.rayIntersection(rayUR, tUR, PhitUR, colorUR, hitNormalUR, 0);
-				s.rayIntersection(rayLL, tLL, PhitLL, colorLL, hitNormalLL, 0);
-				s.rayIntersection(rayLR, tLR, PhitLR, colorLR, hitNormalLR, 0);
+				colorUL = s.rayIntersection(rayUL, tUL, PhitUL, colorUL, hitNormalUL, 0);
+				colorUR = s.rayIntersection(rayUR, tUR, PhitUR, colorUR, hitNormalUR, 0);
+				colorLL = s.rayIntersection(rayLL, tLL, PhitLL, colorLL, hitNormalLL, 0);
+				colorLR = s.rayIntersection(rayLR, tLR, PhitLR, colorLR, hitNormalLR, 0);
 				
-				color = (colorUL + colorUR + colorLL + colorLR) / 4.0;
-		
+				color = (colorUL + colorUR + colorLL + colorLR);
+				//cout << color.red << "  " << color.green << "  " << color.blue << endl;
 				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
-				*/
+				
 
 				//9 rays per pixel
-				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
+				/*Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
 				Vertex pixelPointUM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
 				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
 
@@ -159,7 +165,7 @@ public:
 				
 				color = (colorUL + colorUM + colorUR + colorML+ colorMM + colorMR + colorLL + colorLM + colorLR) / 9.0;
 		
-				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
+				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));*/
 				//cout << color.red << " " << color.green << " " << color.blue << endl;
 				// check if there are any objects between intersected triangle and light source 
                 /*Ray shadowRay(Phit, { pointLight - Phit });

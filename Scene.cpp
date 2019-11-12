@@ -130,6 +130,8 @@ public:
 					t = tTri;
                     Phit = PhitTri;
 					sType = tri.sType;
+
+					diffuseHit = true;
 			}
 		}
 
@@ -147,6 +149,9 @@ public:
                 Phit = PhitTetra;
 				t = tTetra;
 				sType = tetra.sType;
+
+				diffuseHit = false;
+
 			}
 		}
 
@@ -162,6 +167,9 @@ public:
                 Phit = sphereHit;
 				t = sphere_t;
 				sType = sph.sType;
+
+				diffuseHit = false;
+
 			}
 		}
 		double sphere_t2;
@@ -175,6 +183,9 @@ public:
 				Phit = sphereHit2;
 				t = sphere_t2;
 				sType = sph2.sType;
+
+				diffuseHit = false;
+
 			}
 		}
 
@@ -214,9 +225,22 @@ public:
         // Monte Carlo for diffuse surfaces
         else
         {
-			diffuseHit = true;
+			pLightDir = pointLight - Phit;
+			double angle{ acos((pLightDir.normalize()).dotProduct(normal)) };
+			if (abs(angle) > (PI / 2))
+			{
+				color = ColorDbl(0.0, 0.0, 0.0);
+			}
+			else
+			{
+				color = (color*std::abs(cos(angle)));
+			}
 
-
+			if (st < pLightDir.length())
+			{
+				color = color * 0.8;
+			}
+			
 			Ray ray1 = ray;
 			double t1 = t;
 			Vertex Phit1 = Phit;
@@ -233,7 +257,7 @@ public:
 				depth++;
 
 
-				Ray diffuseRay = diffuseReflector(ray, Phit, normal);
+				Ray diffuseRay = diffuseReflector(ray, Phit, normal, diffuseHit);
 				color = color + rayIntersection(diffuseRay, t1, Phit1, color1, normal1, depth);
 				//rayIntersection(out, t, Phit, color, normal, depth);
 				//color = rayIntersection(diffuseRay, t, Phit, color, normal, depth);
@@ -242,27 +266,13 @@ public:
 		
 			//color = color*255.0;
 			// surface is not lit by the light source
-
-			pLightDir = pointLight - Phit1;
-			double angle{ acos((pLightDir.normalize()).dotProduct(normal1)) };
-			if (abs(angle) > (PI / 2))
-			{
-				//color = ColorDbl(0.0, 0.0, 0.0);
-			}
-			else
-			{
-				color = (color*std::abs(cos(angle)));
-			}
         }
 
 		/*--    3 COLOR CASES   --*/
 
 	
 		// there's an object bewteen intersected triangle and light source => triangle should be in shadow
-		if (st < pLightDir.length())
-		{
-			color = color * 0.9;
-		}
+		
 		// surface is lit & there's no object between it and the light source
 		
 
@@ -310,15 +320,15 @@ public:
 		}
 	};
 
-	Ray diffuseReflector(Ray &ray, Vertex &Phit, Direction &normal)
+	Ray diffuseReflector(Ray &ray, Vertex &Phit, Direction &normal, bool &wallHit)
 	{
 		// create local coordinate system around intersection point Phit
 		Direction i{ ray.dir.normalize() };                         // incoming ray in Global Coordinates
 		Direction z{ normal };                                      // Z = normal of Phit                                          
-		Direction x{ (i - z * (z.dotProduct(i))).normalize() };     // X = part of incoming ray orthogonal to Z
-		Direction y{ ((x*-1).crossProduct(z)).normalize() };          // Y = X.crossProduct(Z); transform to local system
-
-																	// transfer coordinate system to glm vectors
+		Direction x{ (i - (z * (i.dotProduct(z)))).normalize() };     // X = part of incoming ray orthogonal to Z
+		Direction y{ (((z)).crossProduct(x*-1)).normalize() };          // Y = X.crossProduct(Z); transform to local system
+		
+																		// transfer coordinate system to glm vectors
 		glm::vec3 I(i.x, i.y, i.z);                           // incoming in global coords
 		glm::vec3 X(x.x, x.y, x.z);                                 // X-axis
 		glm::vec3 Y(y.x, y.y, y.z);                                 // Y-axis
@@ -330,18 +340,26 @@ public:
 		double _y = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
 
 		double theta{ asin(sqrt(_y)) };
-		double phi{ 2 * PI *_x };
+		double phi{ 2.0 * PI *_x };
+
+		glm::vec3 dir1 = -I;
 		
 		// rotate incoming direction with random angles to get outgoing direction
 	
-		glm::vec3 rotY = glm::normalize(glm::rotate(Z, (float)theta, Y));
-		glm::vec3 rotZ = glm::normalize(glm::rotate(rotY, (float)phi, Z));
+		dir1 = glm::normalize(glm::rotate(dir1, (float)phi, Z));
+		dir1 = glm::normalize(glm::rotate(dir1, (float)theta, Y));
 
-		glm::vec3 dir1 = glm::vec3(vecPhit + rotZ);
+
+		dir1 = glm::vec3(vecPhit + dir1);
 
 		Direction outDir{ dir1.x, dir1.y, dir1.z };
 
-		Ray out{ Phit,  outDir*-1 };
+		if (wallHit == true)
+		{
+			outDir = outDir*-1;
+		}
+
+		Ray out{ Phit,  outDir };
 
 		return out;
 	};

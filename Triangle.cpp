@@ -49,7 +49,7 @@ public:
 			if (t > EPS && t < 1000000.0)
 			{
 				Phit = { ray.start + Vertex(t*D.x, t*D.y, t*D.z, 1.0) };
-				//Phit = Phit + normal*0.001;
+				Phit = Phit + normal*0.01;
 				return true;
 			}
 		

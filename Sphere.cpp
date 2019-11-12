@@ -31,7 +31,7 @@ public:
 
         t = (d1 < d2) ? d1 : d2;
         Phit = o + Vertex(l.x, l.y, l.z, 1.0)*t;
-		//Phit = Phit + getSphereNormal(Phit)*0.001;
+		//Phit = Phit + getSphereNormal(Phit)*0.01;
 
         return true; 
     }

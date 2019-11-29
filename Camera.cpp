@@ -36,7 +36,7 @@ public:
     {
         ColorDbl black{ 0.0, 0.0, 0.0 };
 
-        Vertex pointLight{ 5.0, 0.0, 5.0, 1.0 };
+       // Vertex pointLight{ 5.0, 0.0, 5.0, 1.0 };
 		Direction pLightDir;
 
         // create output file
@@ -73,15 +73,19 @@ public:
             for (int w = 0; w < size; w++)   // y
             {
 				pixelPoint = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), 1.0 - hlengthP - (h*lengthP), 1.0);
-				//double randlengthP = ((rand() % 100 + 1) / 100.0)/800.0;     // random double between 0 and 1
-				//double randheightP = ((rand() % 100 + 1) / 100.0)/800.0;
+				//double randlengthP = dis(gen)/800.0;     // random double between 0 and 1
+				//double randheightP = dis(gen)/800.0;
 				//4 rays per pixel
 				double sizefactor = 800.0;
+				//uniform random double between 0 and 1
+				std::random_device rd;
+				std::mt19937 gen(rd());
+				std::uniform_real_distribution<double> dis(0.0, 1.0);
 				
-				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
-				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
-				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
-				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / sizefactor), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / sizefactor), 1.0);
+				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (dis(gen) / sizefactor), pixelPoint.z + (dis(gen) / sizefactor), 1.0);
+				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (dis(gen) / sizefactor), pixelPoint.z + (dis(gen) / sizefactor), 1.0);
+				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (dis(gen) / sizefactor), pixelPoint.z - (dis(gen) / sizefactor), 1.0);
+				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (dis(gen) / sizefactor), pixelPoint.z - (dis(gen) / sizefactor), 1.0);
 				 Ray ray(eye1, { (pixelPoint - eye1).normalize() });
 
 				Ray rayUL(eye1, { (pixelPointUL - eye1).normalize() });
@@ -104,21 +108,21 @@ public:
 				
 				color = (colorUL + colorUR + colorLL + colorLR);
 				//cout << color.red << "  " << color.green << "  " << color.blue << endl;
-				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
+				//color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
 				
 
 				//9 rays per pixel
-				/*Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
-				Vertex pixelPointUM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
-				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, pixelPoint.z + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0);
+				/*Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (dis(gen) / 800.0)+hlengthP, pixelPoint.z + (dis(gen) / 800.0)+hlengthP, 1.0);
+				Vertex pixelPointUM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z + (dis(gen) / 800.0)+hlengthP, 1.0);
+				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (dis(gen) / 800.0)-hlengthP, pixelPoint.z + (dis(gen) / 800.0)+hlengthP, 1.0);
 
-				Vertex pixelPointML = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, 1.0 - hlengthP - (h*lengthP), 1.0);
+				Vertex pixelPointML = Vertex(0.0, pixelPoint.y + (dis(gen) / 800.0)+hlengthP, 1.0 - hlengthP - (h*lengthP), 1.0);
 				Vertex pixelPointMM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), 1.0 - hlengthP - (h*lengthP), 1.0);
-				Vertex pixelPointMR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0 - hlengthP - (h*lengthP), 1.0);
+				Vertex pixelPointMR = Vertex(0.0, pixelPoint.y - (dis(gen) / 800.0)-hlengthP, 1.0 - hlengthP - (h*lengthP), 1.0);
 
-				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (((rand() % 100 + 1) / 100.0) / 800.0)+hlengthP, pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0);
-				Vertex pixelPointLM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0);
-				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, pixelPoint.z - (((rand() % 100 + 1) / 100.0) / 800.0)-hlengthP, 1.0);
+				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (dis(gen) / 800.0)+hlengthP, pixelPoint.z - (dis(gen) / 800.0)-hlengthP, 1.0);
+				Vertex pixelPointLM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z - (dis(gen) / 800.0)-hlengthP, 1.0);
+				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (dis(gen) / 800.0)-hlengthP, pixelPoint.z - (dis(gen) / 800.0)-hlengthP, 1.0);
 				//cout << "original"; pixelPoint.printVertex();
 				//cout << "UL"; pixelPointUL.printVertex();
 				//cout << "UR"; pixelPointUR.printVertex();
@@ -163,9 +167,9 @@ public:
 				s.rayIntersection(rayLR, tLR, PhitLR, colorLR, hitNormalLR, 0);
 			
 				
-				color = (colorUL + colorUM + colorUR + colorML+ colorMM + colorMR + colorLL + colorLM + colorLR) / 9.0;
+				color = (colorUL + colorUM + colorUR + colorML+ colorMM + colorMR + colorLL + colorLM + colorLR);*/
 		
-				color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));*/
+				//color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
 				//cout << color.red << " " << color.green << " " << color.blue << endl;
 				// check if there are any objects between intersected triangle and light source 
                 /*Ray shadowRay(Phit, { pointLight - Phit });
@@ -194,7 +198,10 @@ public:
                     pixelPlane[w][h].color = (color*std::abs(cos(angle)));*/
                     //
                 /*------------------------*/
-				pixelPlane[w][h].color = color;
+				//cout << color << endl;
+				pixelPlane[w][h].color = color*255.0;
+				//cout << color*255.0 << endl;
+
                 // write color to output file
 				out << pixelPlane[w][h].color;
             }

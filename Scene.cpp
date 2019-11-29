@@ -1,4 +1,4 @@
-#ifndef SCENE_CPP
+﻿#ifndef SCENE_CPP
 #define SCENE_CPP
 
 #include "Tetrahedron.cpp"
@@ -7,6 +7,7 @@
 #include <cmath>
 #include "glm/glm.hpp"
 #include "glm/gtx/rotate_vector.hpp"
+#include <random>
 
 const double PI = 3.14159265359;
 
@@ -47,7 +48,7 @@ public:
         vertices[12] = Vertex(10.0, -6.0, 5.0, w);
         vertices[13] = Vertex(0.0, -6.0, 5.0, w);
 
-        ColorDbl white{ 255.0, 255.0, 255.0 };
+       /* ColorDbl white{ 255.0, 255.0, 255.0 };
         ColorDbl red{ 120, 20, 20 };
         ColorDbl blue{ 20, 25, 110 };
         ColorDbl orange{ 255.0, 165.0, 0.0 };
@@ -60,7 +61,22 @@ public:
         ColorDbl yellow{ 200, 145, 70 };
         ColorDbl grey{ 180, 165, 145 };
         ColorDbl brown{ 95, 70, 20 };
-        ColorDbl granite{ 100, 115, 90 };
+        ColorDbl granite{ 100, 115, 90 };*/
+		//RGB colors between 0 and 1
+		ColorDbl white{ 255.0/255.0, 255.0 / 255.0, 255.0 / 255.0 };
+		ColorDbl red{ 120.0 / 255.0, 20.0/255.0, 20.0/255.0 };
+		ColorDbl blue{ 20.0 / 255.0, 25.0 / 255.0, 110.0 / 255.0 };
+		ColorDbl orange{ 255.0 / 255.0, 165.0 / 255.0, 0.0 / 255.0 };
+		ColorDbl cyan{ 0.0 / 255.0, 255.0 / 255.0, 255.0 / 255.0 };
+		ColorDbl pink{ 255.0 / 255.0, 20.0 / 255.0, 147.0 / 255.0 };
+
+		// wall colors
+		ColorDbl purple{ 130.0 / 255.0, 120.0 / 255.0, 145.0 / 255.0 };
+		ColorDbl green{ 23.0 / 255.0, 61.0 / 255.0, 42.0 / 255.0 };
+		ColorDbl yellow{ 200.0 / 255.0, 145.0 / 255.0, 70.0 / 255.0 };
+		ColorDbl grey{ 180.0 / 255.0, 165.0 / 255.0, 145.0 / 255.0 };
+		ColorDbl brown{ 95.0 / 255.0, 70.0 / 255.0, 20.0 / 255.0 };
+		ColorDbl granite{ 100.0 / 255.0, 115.0 / 255.0, 90.0 / 255.0 };
 
         // floor
         triangles.push_back({ vertices[1], vertices[2], vertices[0], white, diffuse });
@@ -104,14 +120,27 @@ public:
         tetra = { v0, v1, v2, v3, red, reflective};
 
         // Sphere
-        sph = { Vertex{ 5.0, -2.0, 0.0, 1.0 }, w, blue, reflective };
-		sph2 = { Vertex{ 3, 0, -2.0, 1.0 }, 0.5, red, diffuse };
+        sph = { Vertex{ 5.0, -2.0, 0.0, 1.0 }, 1.0, blue, reflective };
+		sph2 = { Vertex{ 2.0, 0.0, -2.0, 1.0 }, 0.5, red, diffuse };
+
+		lv0  = Vertex(5.0, 1.0, 4.9, w);
+		lv1  = Vertex(5.0, -1.0, 4.9, w);
+		lv2  = Vertex(6.5, -1.0, 4.9, w);
+		lv3  = Vertex(6.5, 1.0, 4.9, w);
+
+		//Area light
+		triangles.push_back(Triangle(lv0, lv1, lv2, white, lightsource));
+		triangles.push_back(Triangle(lv0, lv2, lv3, white, lightsource));
+		light.push_back(Triangle(lv0, lv1, lv2, white, lightsource));
+		light.push_back(Triangle(lv0, lv2, lv3, white, lightsource));
+
 	};
 
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
 	ColorDbl rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal, int depth)
 	{
-		int maxDepth = 3;
+		RandomPointOnArealight();
+		int maxDepth = 4;
 		bool diffuseHit = false;
 
 		Vertex pointLight{ 5.0, 0.0, 4.9, 1.0 };
@@ -188,12 +217,13 @@ public:
 
 			}
 		}
-
-		Ray shadowRay(Phit, { pointLight - Phit });
-		double st = 10000.0;	// distance between intersection point and point light
+		Vertex ArealightPoint = RandomPointOnArealight();
+		Direction LightDir = ArealightPoint - Phit;
+		Ray shadowRay(Phit, LightDir);
+		double st = LightDir.length();	// distance between intersection point and point light
 		Vertex PhitS;
 		shadowrayIntersection(shadowRay, st, PhitS);
-		Direction pLightDir = pointLight - Phit;
+		//if(st < 10000.0) cout << st << endl;
 
 		// compute angle between surface normal and light direction
 		
@@ -223,23 +253,24 @@ public:
 		}
 
         // Monte Carlo for diffuse surfaces
-        else
+        else if(sType != lightsource)
         {
-			pLightDir = pointLight - Phit;
-			double angle{ acos((pLightDir.normalize()).dotProduct(normal)) };
+			/*LightDir = ArealightPoint - Phit;
+			double angle{ acos((LightDir.normalize()).dotProduct(normal)) };
 			if (abs(angle) > (PI / 2))
 			{
-				color = ColorDbl(0.0, 0.0, 0.0);
+				color = color *0;
 			}
 			else
 			{
 				color = (color*std::abs(cos(angle)));
 			}
 
-			if (st < pLightDir.length())
+			if (st < LightDir.length())
 			{
-				color = color * 0.8;
+				color = color * 0;
 			}
+			*/
 			
 			Ray ray1 = ray;
 			double t1 = t;
@@ -251,6 +282,29 @@ public:
 			//color1 = color / 255.0;
 
 			// shoot ray to get color of close area
+			LightDir = ArealightPoint - Phit;
+			double angle{ acos((LightDir.normalize()).dotProduct(normal)) };
+			/*if (abs(angle) > (PI / 2))
+			{
+			color = color * 0.0;
+			}*/
+			if (st < LightDir.length())
+			{
+				color = color * 0.0;
+			}
+			else
+			{
+				//We compute cos alphak = −Sk · NA (NA : light source normal) and
+				//cos betak = Sk · Nx(Nx : normal at xM).
+				double cosAlpha = (shadowRay.dir*-1.0).dotProduct(light[0].getNormal());
+				double cosBeta = (shadowRay.dir).dotProduct(normal.normalize());
+
+				double Gterm = cosAlpha*cosBeta / (st*st);
+				color = (color* Gterm)*1.5;
+				color.trimColor();
+				//cout << Gterm << endl;
+				
+			}
 			
 			if (depth < maxDepth)
 			{
@@ -258,10 +312,15 @@ public:
 
 
 				Ray diffuseRay = diffuseReflector(ray, Phit, normal, diffuseHit);
-				color = color + rayIntersection(diffuseRay, t1, Phit1, color1, normal1, depth);
+				color = color + (rayIntersection(diffuseRay, t1, Phit1, color1, normal1, depth))*0.3;
 				//rayIntersection(out, t, Phit, color, normal, depth);
 				//color = rayIntersection(diffuseRay, t, Phit, color, normal, depth);
+				
 			}
+
+
+
+			
 
 		
 			//color = color*255.0;
@@ -335,9 +394,14 @@ public:
 		glm::vec3 Z(z.x, z.y, z.z);									// Z-axis
 		
 		glm::vec3 vecPhit(Phit.x, Phit.y, Phit.z);
-																	// generate random azimuth and inclination angle
-		double _x = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
-		double _y = (rand() % 100 + 1) / 100.0;     // random double between 0 and 1
+			
+		
+		// generate random azimuth and inclination angle
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<double> dis(0.0, 1.0);
+		double _x = dis(gen);    // random double between 0 and 1
+		double _y = dis(gen);    // random double between 0 and 1
 
 		double theta{ asin(sqrt(_y)) };
 		double phi{ 2.0 * PI *_x };
@@ -350,23 +414,40 @@ public:
 		dir1 = glm::normalize(glm::rotate(dir1, (float)theta, Y));
 
 
-		dir1 = glm::vec3(vecPhit + dir1);
+		//dir1 = glm::vec3(vecPhit + dir1);
 
 		Direction outDir{ dir1.x, dir1.y, dir1.z };
 
-		if (wallHit == true)
+		/*if (wallHit == true)
 		{
 			outDir = outDir*-1;
-		}
+		}*/
 
 		Ray out{ Phit,  outDir };
 
 		return out;
 	};
+	Vertex RandomPointOnArealight()
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<double> dis(0.0,1.0);
+		double u = dis(gen);
+		double v = dis(gen);
+		//cout << u << endl;
+		//cout << v << endl;
 
+		return Vertex(lv1.x - lv0.x, lv1.y - lv0.y, lv1.z - lv0.z, w)*u + Vertex(lv3.x - lv0.x, lv3.y - lv0.y, lv3.z - lv0.z, w)*v;
+	};
+	
 
 	std::vector<Triangle> triangles;
 	Vertex vertices[14];
+	std::vector<Triangle> light;
+	Vertex lv0;
+	Vertex lv1;
+	Vertex lv2;
+	Vertex lv3;
 
     Sphere sph;
 	Sphere sph2;

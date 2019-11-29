@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <math.h>
+
 using namespace std;
 
 /* Direction  has the three components of a direction vector x, y, z */

@@ -7,7 +7,7 @@ using namespace std;
 /* ColorDbl has three double precision variables that contain the intensities in the
 red, green and blue channel.*/
 
-enum surfaceType { reflective, diffuse };
+enum surfaceType { reflective, diffuse, lightsource };
 
 
 class ColorDbl
@@ -24,6 +24,35 @@ public:
 	ColorDbl operator*(const double d) { return ColorDbl(red*d, green*d, blue*d); };
 	ColorDbl operator+(const ColorDbl c) { return ColorDbl((red+c.red)/2.0, (green + c.green)/2.0, (blue + c.blue)/2.0); };
 	ColorDbl operator/(const double d) { return ColorDbl(red/d, green/d, blue/d); };
+
+	void trimColor()
+	{
+		if (red > 1.0)
+		{
+			red = 1.0;
+		}
+		if (green > 1.0)
+		{
+			green = 1.0;
+		}
+		if (blue > 1.0)
+		{
+			blue = 1.0;
+		}
+
+		if (red < 0.0)
+		{
+			red = 0.0;
+		}
+		if (green < 0.0)
+		{
+			green = 0.0;
+		}
+		if (blue < 0.0)
+		{
+			blue = 0.0;
+		}
+	};
 
 	double red, green, blue;
 

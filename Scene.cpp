@@ -307,7 +307,7 @@ public:
 
 
 				Ray diffuseRay = diffuseReflector(ray, Phit, normal, diffuseHit);
-				color = color + (rayIntersection(diffuseRay, t1, Phit1, color1, normal1, depth));
+				color = color + (rayIntersection(diffuseRay, t1, Phit1, color1, normal1, depth)*0.8);
 				//rayIntersection(out, t, Phit, color, normal, depth);
 				//color = rayIntersection(diffuseRay, t, Phit, color, normal, depth);
 				

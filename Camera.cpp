@@ -8,7 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
-
+#include <chrono>
 
 /* Camera contains two instances of Vertex (the eye points) and a variable that
 allows you to switch between both eye points.
@@ -18,7 +18,6 @@ The ray is followed through the scene and the radiance we give to the
 pixel is computed according to what we learnt in lectures 4 and 5.
 Initially and to test your code you follow the ray until it hits the first
 triangle and assign the triangle color to the ray. */
-
 
 
 class Camera
@@ -47,16 +46,22 @@ public:
         // to the pixel plane
 		Vertex pixelPoint;
 		
-        double lengthP{ 0.0025 };
+        double lengthP = 2.0/size;
         double hlengthP{ lengthP / 2.0 };
-		
+		double sizefactor = (double)size;
+
+		int rootNrSamples = 2;
         // Ray to find intersections
         Vertex Phit;
 		ColorDbl color;
 		Direction hitNormal;
 		Vertex PhitS;
 		
+
+		std::random_device rd;
+		std::mt19937 gen(rd());
 		
+		auto start = chrono::steady_clock::now();
 
         // set color of every pixel in the pixelplane
         for (int h = 0; h < size; h++)          // z
@@ -76,13 +81,26 @@ public:
 				//double randlengthP = dis(gen)/800.0;     // random double between 0 and 1
 				//double randheightP = dis(gen)/800.0;
 				//4 rays per pixel
-				double sizefactor = 800.0;
+			
 				//uniform random double between 0 and 1
-				std::random_device rd;
-				std::mt19937 gen(rd());
+				//          ^ z
+			    //          |
+				//          |
+				//  y <-----|-----> -y
+				//          |
+				//          |
+				//			v -z
+
+
+				std::uniform_real_distribution<double> randomPoint(0.0, lengthP / (double)rootNrSamples);
+				//double pixelw = 1.0 - hlengthP - (w*lengthP) + hlengthP - randomPoint;
+				//double pixelh = (1.0 - hlengthP - (h*lengthP)) + hlengthP - randomPoint(gen);
+
+
+
 				std::uniform_real_distribution<double> dis(0.0, 1.0);
 				
-				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (dis(gen) / sizefactor), pixelPoint.z + (dis(gen) / sizefactor), 1.0);
+				/*Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (dis(gen) / sizefactor), pixelPoint.z + (dis(gen) / sizefactor), 1.0);
 				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (dis(gen) / sizefactor), pixelPoint.z + (dis(gen) / sizefactor), 1.0);
 				Vertex pixelPointLL = Vertex(0.0, pixelPoint.y + (dis(gen) / sizefactor), pixelPoint.z - (dis(gen) / sizefactor), 1.0);
 				Vertex pixelPointLR = Vertex(0.0, pixelPoint.y - (dis(gen) / sizefactor), pixelPoint.z - (dis(gen) / sizefactor), 1.0);
@@ -108,11 +126,11 @@ public:
 				
 				color = (colorUL + colorUR + colorLL + colorLR);
 				//cout << color.red << "  " << color.green << "  " << color.blue << endl;
-				//color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
+				//color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));*/
 				
 
 				//9 rays per pixel
-				/*Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (dis(gen) / 800.0)+hlengthP, pixelPoint.z + (dis(gen) / 800.0)+hlengthP, 1.0);
+				Vertex pixelPointUL = Vertex(0.0, pixelPoint.y + (dis(gen) / 800.0)+hlengthP, pixelPoint.z + (dis(gen) / 800.0)+hlengthP, 1.0);
 				Vertex pixelPointUM = Vertex(0.0, 1.0 - hlengthP - (w*lengthP), pixelPoint.z + (dis(gen) / 800.0)+hlengthP, 1.0);
 				Vertex pixelPointUR = Vertex(0.0, pixelPoint.y - (dis(gen) / 800.0)-hlengthP, pixelPoint.z + (dis(gen) / 800.0)+hlengthP, 1.0);
 
@@ -167,7 +185,7 @@ public:
 				s.rayIntersection(rayLR, tLR, PhitLR, colorLR, hitNormalLR, 0);
 			
 				
-				color = (colorUL + colorUM + colorUR + colorML+ colorMM + colorMR + colorLL + colorLM + colorLR);*/
+				color = (colorUL + colorUM + colorUR + colorML+ colorMM + colorMR + colorLL + colorLM + colorLR);
 		
 				//color = ColorDbl(floor(color.red), floor(color.green), floor(color.blue));
 				//cout << color.red << " " << color.green << " " << color.blue << endl;
@@ -206,6 +224,9 @@ public:
 				out << pixelPlane[w][h].color;
             }
         }
+
+		auto end = chrono::steady_clock::now();
+		cout << "Rendered in: " << chrono::duration_cast<chrono::seconds>(end - start).count() << " seconds." << endl;
 	};
 
     Vertex eye1{ -1.0, 0.0, 0.0, 1.0 };

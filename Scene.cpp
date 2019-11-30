@@ -21,6 +21,7 @@ of each Triangle. It then passes references to the triangle and the
 intersection point to the Ray arg*/
 
 
+
 class Scene
 {
 public:
@@ -129,17 +130,16 @@ public:
 		lv3  = Vertex(6.5, 1.0, 4.9, w);
 
 		//Area light
-		triangles.push_back(Triangle(lv0, lv1, lv2, white, lightsource));
-		triangles.push_back(Triangle(lv0, lv2, lv3, white, lightsource));
-		light.push_back(Triangle(lv0, lv1, lv2, white, lightsource));
-		light.push_back(Triangle(lv0, lv2, lv3, white, lightsource));
+		triangles.push_back(Triangle(lv3, lv2, lv1, white, lightsource));
+		triangles.push_back(Triangle(lv3, lv1, lv0, white, lightsource));
+		light.push_back(Triangle(lv3, lv2, lv1, white, lightsource));
+		light.push_back(Triangle(lv3, lv1, lv0, white, lightsource));
 
 	};
 
     // find intersections between importance ray from eye and triangles, tetrahedrons and speheres 
 	ColorDbl rayIntersection(Ray &ray, double &t, Vertex &Phit, ColorDbl &color, Direction &normal, int depth)
 	{
-		RandomPointOnArealight();
 		int maxDepth = 4;
 		bool diffuseHit = false;
 
@@ -243,13 +243,7 @@ public:
 
 
 			color = rayIntersection(reflectedRay, t, Phit, color, normal, depth);
-			
-            // refracted direction
-            /*double n1{ 1 };     // air
-            double n2{ 1.5 };   // glass
-            double n{ n1 / n2 };
-			Direction T{ (I*n + N*(-n*(N_dot_I)-sqrt(1 - n*n*(1 - N_dot_I*N_dot_I)))).normalize() };
-			Ray refractedRay{ Phit, T };*/
+		
 		}
 
         // Monte Carlo for diffuse surfaces
@@ -282,7 +276,6 @@ public:
 			//color1 = color / 255.0;
 
 			// shoot ray to get color of close area
-			LightDir = ArealightPoint - Phit;
 			double angle{ acos((LightDir.normalize()).dotProduct(normal)) };
 			/*if (abs(angle) > (PI / 2))
 			{
@@ -297,10 +290,12 @@ public:
 				//We compute cos alphak = −Sk · NA (NA : light source normal) and
 				//cos betak = Sk · Nx(Nx : normal at xM).
 				double cosAlpha = (shadowRay.dir*-1.0).dotProduct(light[0].getNormal());
-				double cosBeta = (shadowRay.dir).dotProduct(normal.normalize());
-
+				double cosBeta = (shadowRay.dir).dotProduct(normal);
+				//light[0].normal.printDirection();
+				//normal.printDirection();
 				double Gterm = cosAlpha*cosBeta / (st*st);
-				color = (color* Gterm)*1.5;
+				//double Gterm = cosAlpha*cosBeta;
+				color = (color* Gterm);
 				color.trimColor();
 				//cout << Gterm << endl;
 				
@@ -312,7 +307,7 @@ public:
 
 
 				Ray diffuseRay = diffuseReflector(ray, Phit, normal, diffuseHit);
-				color = color + (rayIntersection(diffuseRay, t1, Phit1, color1, normal1, depth))*0.3;
+				color = color + (rayIntersection(diffuseRay, t1, Phit1, color1, normal1, depth));
 				//rayIntersection(out, t, Phit, color, normal, depth);
 				//color = rayIntersection(diffuseRay, t, Phit, color, normal, depth);
 				
@@ -397,9 +392,10 @@ public:
 			
 		
 		// generate random azimuth and inclination angle
+		std::uniform_real_distribution<double> dis(0.0, 1.0);
 		std::random_device rd;
 		std::mt19937 gen(rd());
-		std::uniform_real_distribution<double> dis(0.0, 1.0);
+
 		double _x = dis(gen);    // random double between 0 and 1
 		double _y = dis(gen);    // random double between 0 and 1
 
@@ -429,15 +425,20 @@ public:
 	};
 	Vertex RandomPointOnArealight()
 	{
+	
+		std::uniform_real_distribution<double> disx(5.0, 6.5);
+		std::uniform_real_distribution<double> disy(-1.0, 1.0);
 		std::random_device rd;
 		std::mt19937 gen(rd());
-		std::uniform_real_distribution<double> dis(0.0,1.0);
-		double u = dis(gen);
-		double v = dis(gen);
+		double u = disx(gen);
+		double v = disy(gen);
 		//cout << u << endl;
 		//cout << v << endl;
+	   //(Vertex(lv1.x - lv0.x, lv1.y - lv0.y, lv1.z - lv0.z, w)*u + Vertex(lv3.x - lv0.x, lv3.y - lv0.y, lv3.z - lv0.z, w)*v).printVertex();
 
-		return Vertex(lv1.x - lv0.x, lv1.y - lv0.y, lv1.z - lv0.z, w)*u + Vertex(lv3.x - lv0.x, lv3.y - lv0.y, lv3.z - lv0.z, w)*v;
+		//return Vertex(lv1.x - lv0.x, lv1.y - lv0.y, lv1.z - lv0.z, w)*u + Vertex(lv3.x - lv0.x, lv3.y - lv0.y, lv3.z - lv0.z, w)*v;
+		//Vertex(disx(gen), disy(gen), 4.9, w).printVertex();
+		return Vertex(disx(gen), disy(gen), 4.9, w);
 	};
 	
 
@@ -452,6 +453,8 @@ public:
     Sphere sph;
 	Sphere sph2;
     Tetrahedron tetra;
+
+	
 
 private:
     double w{ 1.0 };
